@@ -2,6 +2,8 @@
 
 This repository contains educational resources including videos, documents, and configuration examples for learning to develop with the **STM32H7 dual-core microcontrollers (Cortex-M7 + Cortex-M4)**.
 
+![Alt text](https://www.st.com/bin/ecommerce/api/image.PF266503.en.feature-description-include-personalized-no-cpn-large.jpg)
+
 ## 📚 Project Overview
 
 STM32H7 dual-core MCUs are powerful microcontrollers with two cores: a high-performance Cortex-M7 and a power-efficient Cortex-M4. Learning to develop with dual-core systems introduces concepts such as:
