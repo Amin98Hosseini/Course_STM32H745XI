@@ -2,7 +2,7 @@
 
 This repository contains educational resources including videos, documents, and configuration examples for learning to develop with the **STM32H7 dual-core microcontrollers (Cortex-M7 + Cortex-M4)**.
 
-![Board](https://www.st.com/bin/ecommerce/api/image.PF266503.en.feature-description-include-personalized-no-cpn-large.jpg)
+![Board](https://github.com/Amin98Hosseini/Course_STM32H745XI/blob/main/Board.jpg)
 
 ## 📚 Project Overview
 
