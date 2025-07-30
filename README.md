@@ -42,6 +42,7 @@ stm32h7-dualcore-learn/
 │
 ├── README.md
 └── LICENSE
+```
 
 ## Support Me
 <a href="https://www.coffeebede.com/amin98hosseini">
