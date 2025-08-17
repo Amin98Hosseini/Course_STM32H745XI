@@ -1,0 +1,3647 @@
+
+Test_DCache_CM4.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   00000298  08100000  08100000  00001000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         000015c0  08100298  08100298  00001298  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000018  08101858  08101858  00002858  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .init_array   00000004  08101870  08101870  00002870  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  4 .fini_array   00000004  08101874  08101874  00002874  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  5 .data         00000010  10000000  08101878  00003000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .bss          00000098  10000010  08101888  00003010  2**2
+                  ALLOC
+  7 ._user_heap_stack 00000600  100000a8  08101888  000030a8  2**0
+                  ALLOC
+  8 .ARM.attributes 00000030  00000000  00000000  00003010  2**0
+                  CONTENTS, READONLY
+  9 .debug_info   00006f1f  00000000  00000000  00003040  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 10 .debug_abbrev 000014a0  00000000  00000000  00009f5f  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 11 .debug_aranges 00000740  00000000  00000000  0000b400  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 12 .debug_rnglists 00000561  00000000  00000000  0000bb40  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 13 .debug_macro  000376ab  00000000  00000000  0000c0a1  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_line   00009c4d  00000000  00000000  0004374c  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_str    0016f808  00000000  00000000  0004d399  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .comment      00000043  00000000  00000000  001bcba1  2**0
+                  CONTENTS, READONLY
+ 17 .debug_frame  00001bf0  00000000  00000000  001bcbe4  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_line_str 0000005e  00000000  00000000  001be7d4  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+08100298 <__do_global_dtors_aux>:
+ 8100298:	b510      	push	{r4, lr}
+ 810029a:	4c05      	ldr	r4, [pc, #20]	@ (81002b0 <__do_global_dtors_aux+0x18>)
+ 810029c:	7823      	ldrb	r3, [r4, #0]
+ 810029e:	b933      	cbnz	r3, 81002ae <__do_global_dtors_aux+0x16>
+ 81002a0:	4b04      	ldr	r3, [pc, #16]	@ (81002b4 <__do_global_dtors_aux+0x1c>)
+ 81002a2:	b113      	cbz	r3, 81002aa <__do_global_dtors_aux+0x12>
+ 81002a4:	4804      	ldr	r0, [pc, #16]	@ (81002b8 <__do_global_dtors_aux+0x20>)
+ 81002a6:	f3af 8000 	nop.w
+ 81002aa:	2301      	movs	r3, #1
+ 81002ac:	7023      	strb	r3, [r4, #0]
+ 81002ae:	bd10      	pop	{r4, pc}
+ 81002b0:	10000010 	.word	0x10000010
+ 81002b4:	00000000 	.word	0x00000000
+ 81002b8:	08101840 	.word	0x08101840
+
+081002bc <frame_dummy>:
+ 81002bc:	b508      	push	{r3, lr}
+ 81002be:	4b03      	ldr	r3, [pc, #12]	@ (81002cc <frame_dummy+0x10>)
+ 81002c0:	b11b      	cbz	r3, 81002ca <frame_dummy+0xe>
+ 81002c2:	4903      	ldr	r1, [pc, #12]	@ (81002d0 <frame_dummy+0x14>)
+ 81002c4:	4803      	ldr	r0, [pc, #12]	@ (81002d4 <frame_dummy+0x18>)
+ 81002c6:	f3af 8000 	nop.w
+ 81002ca:	bd08      	pop	{r3, pc}
+ 81002cc:	00000000 	.word	0x00000000
+ 81002d0:	10000014 	.word	0x10000014
+ 81002d4:	08101840 	.word	0x08101840
+
+081002d8 <SystemInit>:
+  *         configuration.
+  * @param  None
+  * @retval None
+  */
+void SystemInit (void)
+{
+ 81002d8:	b480      	push	{r7}
+ 81002da:	af00      	add	r7, sp, #0
+  /* FPU settings ------------------------------------------------------------*/
+  #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+    SCB->CPACR |= ((3UL << (10*2))|(3UL << (11*2)));  /* set CP10 and CP11 Full Access */
+ 81002dc:	4b09      	ldr	r3, [pc, #36]	@ (8100304 <SystemInit+0x2c>)
+ 81002de:	f8d3 3088 	ldr.w	r3, [r3, #136]	@ 0x88
+ 81002e2:	4a08      	ldr	r2, [pc, #32]	@ (8100304 <SystemInit+0x2c>)
+ 81002e4:	f443 0370 	orr.w	r3, r3, #15728640	@ 0xf00000
+ 81002e8:	f8c2 3088 	str.w	r3, [r2, #136]	@ 0x88
+  #endif
+
+    /*SEVONPEND enabled so that an interrupt coming from the CPU(n) interrupt signal is
+     detectable by the CPU after a WFI/WFE instruction.*/
+ SCB->SCR |= SCB_SCR_SEVONPEND_Msk;
+ 81002ec:	4b05      	ldr	r3, [pc, #20]	@ (8100304 <SystemInit+0x2c>)
+ 81002ee:	691b      	ldr	r3, [r3, #16]
+ 81002f0:	4a04      	ldr	r2, [pc, #16]	@ (8100304 <SystemInit+0x2c>)
+ 81002f2:	f043 0310 	orr.w	r3, r3, #16
+ 81002f6:	6113      	str	r3, [r2, #16]
+#endif /* USER_VECT_TAB_ADDRESS */
+
+#else
+#error Please #define CORE_CM4 or CORE_CM7
+#endif /* CORE_CM4 */
+}
+ 81002f8:	bf00      	nop
+ 81002fa:	46bd      	mov	sp, r7
+ 81002fc:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8100300:	4770      	bx	lr
+ 8100302:	bf00      	nop
+ 8100304:	e000ed00 	.word	0xe000ed00
+
+08100308 <ExitRun0Mode>:
+  *
+  * @param  None
+  * @retval None
+  */
+void ExitRun0Mode(void)
+{
+ 8100308:	b480      	push	{r7}
+ 810030a:	af00      	add	r7, sp, #0
+  /* Wait till voltage level flag is set */
+  while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
+  {}
+#elif defined(USE_PWR_DIRECT_SMPS_SUPPLY) && defined(SMPS)
+  /* Exit Run* mode */
+  PWR->CR3 &= ~(PWR_CR3_LDOEN);
+ 810030c:	4b09      	ldr	r3, [pc, #36]	@ (8100334 <ExitRun0Mode+0x2c>)
+ 810030e:	68db      	ldr	r3, [r3, #12]
+ 8100310:	4a08      	ldr	r2, [pc, #32]	@ (8100334 <ExitRun0Mode+0x2c>)
+ 8100312:	f023 0302 	bic.w	r3, r3, #2
+ 8100316:	60d3      	str	r3, [r2, #12]
+  /* Wait till voltage level flag is set */
+  while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
+ 8100318:	bf00      	nop
+ 810031a:	4b06      	ldr	r3, [pc, #24]	@ (8100334 <ExitRun0Mode+0x2c>)
+ 810031c:	685b      	ldr	r3, [r3, #4]
+ 810031e:	f403 5300 	and.w	r3, r3, #8192	@ 0x2000
+ 8100322:	2b00      	cmp	r3, #0
+ 8100324:	d0f9      	beq.n	810031a <ExitRun0Mode+0x12>
+  while ((PWR->CSR1 & PWR_CSR1_ACTVOSRDY) == 0U)
+  {}
+#else
+  /* No system power supply configuration is selected at exit Run* mode */
+#endif /* USE_PWR_LDO_SUPPLY */
+}
+ 8100326:	bf00      	nop
+ 8100328:	bf00      	nop
+ 810032a:	46bd      	mov	sp, r7
+ 810032c:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8100330:	4770      	bx	lr
+ 8100332:	bf00      	nop
+ 8100334:	58024800 	.word	0x58024800
+
+08100338 <main>:
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
+int main(void)
+{
+ 8100338:	b580      	push	{r7, lr}
+ 810033a:	b082      	sub	sp, #8
+ 810033c:	af00      	add	r7, sp, #0
+
+  /* USER CODE END 1 */
+
+/* USER CODE BEGIN Boot_Mode_Sequence_1 */
+  /*HW semaphore Clock enable*/
+  __HAL_RCC_HSEM_CLK_ENABLE();
+ 810033e:	4b1b      	ldr	r3, [pc, #108]	@ (81003ac <main+0x74>)
+ 8100340:	f8d3 30e0 	ldr.w	r3, [r3, #224]	@ 0xe0
+ 8100344:	4a19      	ldr	r2, [pc, #100]	@ (81003ac <main+0x74>)
+ 8100346:	f043 7300 	orr.w	r3, r3, #33554432	@ 0x2000000
+ 810034a:	f8c2 30e0 	str.w	r3, [r2, #224]	@ 0xe0
+ 810034e:	4b17      	ldr	r3, [pc, #92]	@ (81003ac <main+0x74>)
+ 8100350:	f8d3 30e0 	ldr.w	r3, [r3, #224]	@ 0xe0
+ 8100354:	f003 7300 	and.w	r3, r3, #33554432	@ 0x2000000
+ 8100358:	607b      	str	r3, [r7, #4]
+ 810035a:	687b      	ldr	r3, [r7, #4]
+  /* Activate HSEM notification for Cortex-M4*/
+  HAL_HSEM_ActivateNotification(__HAL_HSEM_SEMID_TO_MASK(HSEM_ID_0));
+ 810035c:	2001      	movs	r0, #1
+ 810035e:	f001 f837 	bl	81013d0 <HAL_HSEM_ActivateNotification>
+  /*
+  Domain D2 goes to STOP mode (Cortex-M4 in deep-sleep) waiting for Cortex-M7 to
+  perform system initialization (system clock config, external memory configuration.. )
+  */
+  HAL_PWREx_ClearPendingEvent();
+ 8100362:	f001 f8c1 	bl	81014e8 <HAL_PWREx_ClearPendingEvent>
+  HAL_PWREx_EnterSTOPMode(PWR_MAINREGULATOR_ON, PWR_STOPENTRY_WFE, PWR_D2_DOMAIN);
+ 8100366:	2201      	movs	r2, #1
+ 8100368:	2102      	movs	r1, #2
+ 810036a:	2000      	movs	r0, #0
+ 810036c:	f001 f842 	bl	81013f4 <HAL_PWREx_EnterSTOPMode>
+  /* Clear HSEM flag */
+  __HAL_HSEM_CLEAR_FLAG(__HAL_HSEM_SEMID_TO_MASK(HSEM_ID_0));
+ 8100370:	4b0f      	ldr	r3, [pc, #60]	@ (81003b0 <main+0x78>)
+ 8100372:	681b      	ldr	r3, [r3, #0]
+ 8100374:	f003 03f0 	and.w	r3, r3, #240	@ 0xf0
+ 8100378:	2b70      	cmp	r3, #112	@ 0x70
+ 810037a:	d108      	bne.n	810038e <main+0x56>
+ 810037c:	4b0d      	ldr	r3, [pc, #52]	@ (81003b4 <main+0x7c>)
+ 810037e:	f8d3 3104 	ldr.w	r3, [r3, #260]	@ 0x104
+ 8100382:	4a0c      	ldr	r2, [pc, #48]	@ (81003b4 <main+0x7c>)
+ 8100384:	f043 0301 	orr.w	r3, r3, #1
+ 8100388:	f8c2 3104 	str.w	r3, [r2, #260]	@ 0x104
+ 810038c:	e007      	b.n	810039e <main+0x66>
+ 810038e:	4b09      	ldr	r3, [pc, #36]	@ (81003b4 <main+0x7c>)
+ 8100390:	f8d3 3114 	ldr.w	r3, [r3, #276]	@ 0x114
+ 8100394:	4a07      	ldr	r2, [pc, #28]	@ (81003b4 <main+0x7c>)
+ 8100396:	f043 0301 	orr.w	r3, r3, #1
+ 810039a:	f8c2 3114 	str.w	r3, [r2, #276]	@ 0x114
+
+/* USER CODE END Boot_Mode_Sequence_1 */
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+ 810039e:	f000 f8d7 	bl	8100550 <HAL_Init>
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_DMA_Init();
+ 81003a2:	f000 f809 	bl	81003b8 <MX_DMA_Init>
+
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+ 81003a6:	bf00      	nop
+ 81003a8:	e7fd      	b.n	81003a6 <main+0x6e>
+ 81003aa:	bf00      	nop
+ 81003ac:	58024400 	.word	0x58024400
+ 81003b0:	e000ed00 	.word	0xe000ed00
+ 81003b4:	58026400 	.word	0x58026400
+
+081003b8 <MX_DMA_Init>:
+  * Enable DMA controller clock
+  * Configure DMA for memory to memory transfers
+  *   hdma_memtomem_dma1_stream0
+  */
+static void MX_DMA_Init(void)
+{
+ 81003b8:	b580      	push	{r7, lr}
+ 81003ba:	b082      	sub	sp, #8
+ 81003bc:	af00      	add	r7, sp, #0
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+ 81003be:	4b23      	ldr	r3, [pc, #140]	@ (810044c <MX_DMA_Init+0x94>)
+ 81003c0:	f8d3 30d8 	ldr.w	r3, [r3, #216]	@ 0xd8
+ 81003c4:	4a21      	ldr	r2, [pc, #132]	@ (810044c <MX_DMA_Init+0x94>)
+ 81003c6:	f043 0301 	orr.w	r3, r3, #1
+ 81003ca:	f8c2 30d8 	str.w	r3, [r2, #216]	@ 0xd8
+ 81003ce:	4b1f      	ldr	r3, [pc, #124]	@ (810044c <MX_DMA_Init+0x94>)
+ 81003d0:	f8d3 30d8 	ldr.w	r3, [r3, #216]	@ 0xd8
+ 81003d4:	f003 0301 	and.w	r3, r3, #1
+ 81003d8:	607b      	str	r3, [r7, #4]
+ 81003da:	687b      	ldr	r3, [r7, #4]
+
+  /* Configure DMA request hdma_memtomem_dma1_stream0 on DMA1_Stream0 */
+  hdma_memtomem_dma1_stream0.Instance = DMA1_Stream0;
+ 81003dc:	4b1c      	ldr	r3, [pc, #112]	@ (8100450 <MX_DMA_Init+0x98>)
+ 81003de:	4a1d      	ldr	r2, [pc, #116]	@ (8100454 <MX_DMA_Init+0x9c>)
+ 81003e0:	601a      	str	r2, [r3, #0]
+  hdma_memtomem_dma1_stream0.Init.Request = DMA_REQUEST_MEM2MEM;
+ 81003e2:	4b1b      	ldr	r3, [pc, #108]	@ (8100450 <MX_DMA_Init+0x98>)
+ 81003e4:	2200      	movs	r2, #0
+ 81003e6:	605a      	str	r2, [r3, #4]
+  hdma_memtomem_dma1_stream0.Init.Direction = DMA_MEMORY_TO_MEMORY;
+ 81003e8:	4b19      	ldr	r3, [pc, #100]	@ (8100450 <MX_DMA_Init+0x98>)
+ 81003ea:	2280      	movs	r2, #128	@ 0x80
+ 81003ec:	609a      	str	r2, [r3, #8]
+  hdma_memtomem_dma1_stream0.Init.PeriphInc = DMA_PINC_ENABLE;
+ 81003ee:	4b18      	ldr	r3, [pc, #96]	@ (8100450 <MX_DMA_Init+0x98>)
+ 81003f0:	f44f 7200 	mov.w	r2, #512	@ 0x200
+ 81003f4:	60da      	str	r2, [r3, #12]
+  hdma_memtomem_dma1_stream0.Init.MemInc = DMA_MINC_ENABLE;
+ 81003f6:	4b16      	ldr	r3, [pc, #88]	@ (8100450 <MX_DMA_Init+0x98>)
+ 81003f8:	f44f 6280 	mov.w	r2, #1024	@ 0x400
+ 81003fc:	611a      	str	r2, [r3, #16]
+  hdma_memtomem_dma1_stream0.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+ 81003fe:	4b14      	ldr	r3, [pc, #80]	@ (8100450 <MX_DMA_Init+0x98>)
+ 8100400:	f44f 5280 	mov.w	r2, #4096	@ 0x1000
+ 8100404:	615a      	str	r2, [r3, #20]
+  hdma_memtomem_dma1_stream0.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+ 8100406:	4b12      	ldr	r3, [pc, #72]	@ (8100450 <MX_DMA_Init+0x98>)
+ 8100408:	f44f 4280 	mov.w	r2, #16384	@ 0x4000
+ 810040c:	619a      	str	r2, [r3, #24]
+  hdma_memtomem_dma1_stream0.Init.Mode = DMA_NORMAL;
+ 810040e:	4b10      	ldr	r3, [pc, #64]	@ (8100450 <MX_DMA_Init+0x98>)
+ 8100410:	2200      	movs	r2, #0
+ 8100412:	61da      	str	r2, [r3, #28]
+  hdma_memtomem_dma1_stream0.Init.Priority = DMA_PRIORITY_HIGH;
+ 8100414:	4b0e      	ldr	r3, [pc, #56]	@ (8100450 <MX_DMA_Init+0x98>)
+ 8100416:	f44f 3200 	mov.w	r2, #131072	@ 0x20000
+ 810041a:	621a      	str	r2, [r3, #32]
+  hdma_memtomem_dma1_stream0.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+ 810041c:	4b0c      	ldr	r3, [pc, #48]	@ (8100450 <MX_DMA_Init+0x98>)
+ 810041e:	2204      	movs	r2, #4
+ 8100420:	625a      	str	r2, [r3, #36]	@ 0x24
+  hdma_memtomem_dma1_stream0.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+ 8100422:	4b0b      	ldr	r3, [pc, #44]	@ (8100450 <MX_DMA_Init+0x98>)
+ 8100424:	2203      	movs	r2, #3
+ 8100426:	629a      	str	r2, [r3, #40]	@ 0x28
+  hdma_memtomem_dma1_stream0.Init.MemBurst = DMA_MBURST_SINGLE;
+ 8100428:	4b09      	ldr	r3, [pc, #36]	@ (8100450 <MX_DMA_Init+0x98>)
+ 810042a:	2200      	movs	r2, #0
+ 810042c:	62da      	str	r2, [r3, #44]	@ 0x2c
+  hdma_memtomem_dma1_stream0.Init.PeriphBurst = DMA_PBURST_SINGLE;
+ 810042e:	4b08      	ldr	r3, [pc, #32]	@ (8100450 <MX_DMA_Init+0x98>)
+ 8100430:	2200      	movs	r2, #0
+ 8100432:	631a      	str	r2, [r3, #48]	@ 0x30
+  if (HAL_DMA_Init(&hdma_memtomem_dma1_stream0) != HAL_OK)
+ 8100434:	4806      	ldr	r0, [pc, #24]	@ (8100450 <MX_DMA_Init+0x98>)
+ 8100436:	f000 fa35 	bl	81008a4 <HAL_DMA_Init>
+ 810043a:	4603      	mov	r3, r0
+ 810043c:	2b00      	cmp	r3, #0
+ 810043e:	d001      	beq.n	8100444 <MX_DMA_Init+0x8c>
+  {
+    Error_Handler( );
+ 8100440:	f000 f80a 	bl	8100458 <Error_Handler>
+  }
+
+}
+ 8100444:	bf00      	nop
+ 8100446:	3708      	adds	r7, #8
+ 8100448:	46bd      	mov	sp, r7
+ 810044a:	bd80      	pop	{r7, pc}
+ 810044c:	58024400 	.word	0x58024400
+ 8100450:	1000002c 	.word	0x1000002c
+ 8100454:	40020010 	.word	0x40020010
+
+08100458 <Error_Handler>:
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
+ 8100458:	b480      	push	{r7}
+ 810045a:	af00      	add	r7, sp, #0
+  \details Disables IRQ interrupts by setting the I-bit in the CPSR.
+           Can only be executed in Privileged modes.
+ */
+__STATIC_FORCEINLINE void __disable_irq(void)
+{
+  __ASM volatile ("cpsid i" : : : "memory");
+ 810045c:	b672      	cpsid	i
+}
+ 810045e:	bf00      	nop
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+  __disable_irq();
+  while (1)
+ 8100460:	bf00      	nop
+ 8100462:	e7fd      	b.n	8100460 <Error_Handler+0x8>
+
+08100464 <HAL_MspInit>:
+/* USER CODE END 0 */
+/**
+  * Initializes the Global MSP.
+  */
+void HAL_MspInit(void)
+{
+ 8100464:	b480      	push	{r7}
+ 8100466:	b083      	sub	sp, #12
+ 8100468:	af00      	add	r7, sp, #0
+
+  /* USER CODE BEGIN MspInit 0 */
+
+  /* USER CODE END MspInit 0 */
+
+  __HAL_RCC_SYSCFG_CLK_ENABLE();
+ 810046a:	4b0a      	ldr	r3, [pc, #40]	@ (8100494 <HAL_MspInit+0x30>)
+ 810046c:	f8d3 30f4 	ldr.w	r3, [r3, #244]	@ 0xf4
+ 8100470:	4a08      	ldr	r2, [pc, #32]	@ (8100494 <HAL_MspInit+0x30>)
+ 8100472:	f043 0302 	orr.w	r3, r3, #2
+ 8100476:	f8c2 30f4 	str.w	r3, [r2, #244]	@ 0xf4
+ 810047a:	4b06      	ldr	r3, [pc, #24]	@ (8100494 <HAL_MspInit+0x30>)
+ 810047c:	f8d3 30f4 	ldr.w	r3, [r3, #244]	@ 0xf4
+ 8100480:	f003 0302 	and.w	r3, r3, #2
+ 8100484:	607b      	str	r3, [r7, #4]
+ 8100486:	687b      	ldr	r3, [r7, #4]
+  /* System interrupt init*/
+
+  /* USER CODE BEGIN MspInit 1 */
+
+  /* USER CODE END MspInit 1 */
+}
+ 8100488:	bf00      	nop
+ 810048a:	370c      	adds	r7, #12
+ 810048c:	46bd      	mov	sp, r7
+ 810048e:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8100492:	4770      	bx	lr
+ 8100494:	58024400 	.word	0x58024400
+
+08100498 <NMI_Handler>:
+/******************************************************************************/
+/**
+  * @brief This function handles Non maskable interrupt.
+  */
+void NMI_Handler(void)
+{
+ 8100498:	b480      	push	{r7}
+ 810049a:	af00      	add	r7, sp, #0
+  /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
+
+  /* USER CODE END NonMaskableInt_IRQn 0 */
+  /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
+   while (1)
+ 810049c:	bf00      	nop
+ 810049e:	e7fd      	b.n	810049c <NMI_Handler+0x4>
+
+081004a0 <HardFault_Handler>:
+
+/**
+  * @brief This function handles Hard fault interrupt.
+  */
+void HardFault_Handler(void)
+{
+ 81004a0:	b480      	push	{r7}
+ 81004a2:	af00      	add	r7, sp, #0
+  /* USER CODE BEGIN HardFault_IRQn 0 */
+
+  /* USER CODE END HardFault_IRQn 0 */
+  while (1)
+ 81004a4:	bf00      	nop
+ 81004a6:	e7fd      	b.n	81004a4 <HardFault_Handler+0x4>
+
+081004a8 <MemManage_Handler>:
+
+/**
+  * @brief This function handles Memory management fault.
+  */
+void MemManage_Handler(void)
+{
+ 81004a8:	b480      	push	{r7}
+ 81004aa:	af00      	add	r7, sp, #0
+  /* USER CODE BEGIN MemoryManagement_IRQn 0 */
+
+  /* USER CODE END MemoryManagement_IRQn 0 */
+  while (1)
+ 81004ac:	bf00      	nop
+ 81004ae:	e7fd      	b.n	81004ac <MemManage_Handler+0x4>
+
+081004b0 <BusFault_Handler>:
+
+/**
+  * @brief This function handles Pre-fetch fault, memory access fault.
+  */
+void BusFault_Handler(void)
+{
+ 81004b0:	b480      	push	{r7}
+ 81004b2:	af00      	add	r7, sp, #0
+  /* USER CODE BEGIN BusFault_IRQn 0 */
+
+  /* USER CODE END BusFault_IRQn 0 */
+  while (1)
+ 81004b4:	bf00      	nop
+ 81004b6:	e7fd      	b.n	81004b4 <BusFault_Handler+0x4>
+
+081004b8 <UsageFault_Handler>:
+
+/**
+  * @brief This function handles Undefined instruction or illegal state.
+  */
+void UsageFault_Handler(void)
+{
+ 81004b8:	b480      	push	{r7}
+ 81004ba:	af00      	add	r7, sp, #0
+  /* USER CODE BEGIN UsageFault_IRQn 0 */
+
+  /* USER CODE END UsageFault_IRQn 0 */
+  while (1)
+ 81004bc:	bf00      	nop
+ 81004be:	e7fd      	b.n	81004bc <UsageFault_Handler+0x4>
+
+081004c0 <SVC_Handler>:
+
+/**
+  * @brief This function handles System service call via SWI instruction.
+  */
+void SVC_Handler(void)
+{
+ 81004c0:	b480      	push	{r7}
+ 81004c2:	af00      	add	r7, sp, #0
+
+  /* USER CODE END SVCall_IRQn 0 */
+  /* USER CODE BEGIN SVCall_IRQn 1 */
+
+  /* USER CODE END SVCall_IRQn 1 */
+}
+ 81004c4:	bf00      	nop
+ 81004c6:	46bd      	mov	sp, r7
+ 81004c8:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 81004cc:	4770      	bx	lr
+
+081004ce <DebugMon_Handler>:
+
+/**
+  * @brief This function handles Debug monitor.
+  */
+void DebugMon_Handler(void)
+{
+ 81004ce:	b480      	push	{r7}
+ 81004d0:	af00      	add	r7, sp, #0
+
+  /* USER CODE END DebugMonitor_IRQn 0 */
+  /* USER CODE BEGIN DebugMonitor_IRQn 1 */
+
+  /* USER CODE END DebugMonitor_IRQn 1 */
+}
+ 81004d2:	bf00      	nop
+ 81004d4:	46bd      	mov	sp, r7
+ 81004d6:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 81004da:	4770      	bx	lr
+
+081004dc <PendSV_Handler>:
+
+/**
+  * @brief This function handles Pendable request for system service.
+  */
+void PendSV_Handler(void)
+{
+ 81004dc:	b480      	push	{r7}
+ 81004de:	af00      	add	r7, sp, #0
+
+  /* USER CODE END PendSV_IRQn 0 */
+  /* USER CODE BEGIN PendSV_IRQn 1 */
+
+  /* USER CODE END PendSV_IRQn 1 */
+}
+ 81004e0:	bf00      	nop
+ 81004e2:	46bd      	mov	sp, r7
+ 81004e4:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 81004e8:	4770      	bx	lr
+
+081004ea <SysTick_Handler>:
+
+/**
+  * @brief This function handles System tick timer.
+  */
+void SysTick_Handler(void)
+{
+ 81004ea:	b580      	push	{r7, lr}
+ 81004ec:	af00      	add	r7, sp, #0
+  /* USER CODE BEGIN SysTick_IRQn 0 */
+
+  /* USER CODE END SysTick_IRQn 0 */
+  HAL_IncTick();
+ 81004ee:	f000 f8c3 	bl	8100678 <HAL_IncTick>
+  /* USER CODE BEGIN SysTick_IRQn 1 */
+
+  /* USER CODE END SysTick_IRQn 1 */
+}
+ 81004f2:	bf00      	nop
+ 81004f4:	bd80      	pop	{r7, pc}
+	...
+
+081004f8 <Reset_Handler>:
+
+    .section  .text.Reset_Handler
+  .weak  Reset_Handler
+  .type  Reset_Handler, %function
+Reset_Handler:
+  ldr   sp, =_estack      /* set stack pointer */
+ 81004f8:	f8df d038 	ldr.w	sp, [pc, #56]	@ 8100534 <LoopFillZerobss+0xe>
+
+/* Call the ExitRun0Mode function to configure the power supply */
+  bl  ExitRun0Mode
+ 81004fc:	f7ff ff04 	bl	8100308 <ExitRun0Mode>
+/* Call the clock system initialization function.*/
+  bl  SystemInit
+ 8100500:	f7ff feea 	bl	81002d8 <SystemInit>
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+ 8100504:	480c      	ldr	r0, [pc, #48]	@ (8100538 <LoopFillZerobss+0x12>)
+  ldr r1, =_edata
+ 8100506:	490d      	ldr	r1, [pc, #52]	@ (810053c <LoopFillZerobss+0x16>)
+  ldr r2, =_sidata
+ 8100508:	4a0d      	ldr	r2, [pc, #52]	@ (8100540 <LoopFillZerobss+0x1a>)
+  movs r3, #0
+ 810050a:	2300      	movs	r3, #0
+  b LoopCopyDataInit
+ 810050c:	e002      	b.n	8100514 <LoopCopyDataInit>
+
+0810050e <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
+ 810050e:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
+ 8100510:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
+ 8100512:	3304      	adds	r3, #4
+
+08100514 <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
+ 8100514:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
+ 8100516:	428c      	cmp	r4, r1
+  bcc CopyDataInit
+ 8100518:	d3f9      	bcc.n	810050e <CopyDataInit>
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+ 810051a:	4a0a      	ldr	r2, [pc, #40]	@ (8100544 <LoopFillZerobss+0x1e>)
+  ldr r4, =_ebss
+ 810051c:	4c0a      	ldr	r4, [pc, #40]	@ (8100548 <LoopFillZerobss+0x22>)
+  movs r3, #0
+ 810051e:	2300      	movs	r3, #0
+  b LoopFillZerobss
+ 8100520:	e001      	b.n	8100526 <LoopFillZerobss>
+
+08100522 <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
+ 8100522:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 8100524:	3204      	adds	r2, #4
+
+08100526 <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
+ 8100526:	42a2      	cmp	r2, r4
+  bcc FillZerobss
+ 8100528:	d3fb      	bcc.n	8100522 <FillZerobss>
+
+/* Call static constructors */
+    bl __libc_init_array
+ 810052a:	f001 f965 	bl	81017f8 <__libc_init_array>
+/* Call the application's entry point.*/
+  bl  main
+ 810052e:	f7ff ff03 	bl	8100338 <main>
+  bx  lr
+ 8100532:	4770      	bx	lr
+  ldr   sp, =_estack      /* set stack pointer */
+ 8100534:	10048000 	.word	0x10048000
+  ldr r0, =_sdata
+ 8100538:	10000000 	.word	0x10000000
+  ldr r1, =_edata
+ 810053c:	10000010 	.word	0x10000010
+  ldr r2, =_sidata
+ 8100540:	08101878 	.word	0x08101878
+  ldr r2, =_sbss
+ 8100544:	10000010 	.word	0x10000010
+  ldr r4, =_ebss
+ 8100548:	100000a8 	.word	0x100000a8
+
+0810054c <ADC3_IRQHandler>:
+ * @retval None
+*/
+    .section  .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b  Infinite_Loop
+ 810054c:	e7fe      	b.n	810054c <ADC3_IRQHandler>
+	...
+
+08100550 <HAL_Init>:
+  *         need to ensure that the SysTick time base is always set to 1 millisecond
+  *         to have correct HAL operation.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_Init(void)
+{
+ 8100550:	b580      	push	{r7, lr}
+ 8100552:	b082      	sub	sp, #8
+ 8100554:	af00      	add	r7, sp, #0
+
+uint32_t common_system_clock;
+
+#if defined(DUAL_CORE) && defined(CORE_CM4)
+   /* Configure Cortex-M4 Instruction cache through ART accelerator */
+   __HAL_RCC_ART_CLK_ENABLE();                   /* Enable the Cortex-M4 ART Clock */
+ 8100556:	4b28      	ldr	r3, [pc, #160]	@ (81005f8 <HAL_Init+0xa8>)
+ 8100558:	f8d3 30d8 	ldr.w	r3, [r3, #216]	@ 0xd8
+ 810055c:	4a26      	ldr	r2, [pc, #152]	@ (81005f8 <HAL_Init+0xa8>)
+ 810055e:	f443 4380 	orr.w	r3, r3, #16384	@ 0x4000
+ 8100562:	f8c2 30d8 	str.w	r3, [r2, #216]	@ 0xd8
+ 8100566:	4b24      	ldr	r3, [pc, #144]	@ (81005f8 <HAL_Init+0xa8>)
+ 8100568:	f8d3 30d8 	ldr.w	r3, [r3, #216]	@ 0xd8
+ 810056c:	f403 4380 	and.w	r3, r3, #16384	@ 0x4000
+ 8100570:	603b      	str	r3, [r7, #0]
+ 8100572:	683b      	ldr	r3, [r7, #0]
+   __HAL_ART_CONFIG_BASE_ADDRESS(0x08100000UL);  /* Configure the Cortex-M4 ART Base address to the Flash Bank 2 : */
+ 8100574:	4b21      	ldr	r3, [pc, #132]	@ (81005fc <HAL_Init+0xac>)
+ 8100576:	681b      	ldr	r3, [r3, #0]
+ 8100578:	f423 237f 	bic.w	r3, r3, #1044480	@ 0xff000
+ 810057c:	f423 6370 	bic.w	r3, r3, #3840	@ 0xf00
+ 8100580:	4a1e      	ldr	r2, [pc, #120]	@ (81005fc <HAL_Init+0xac>)
+ 8100582:	f443 4301 	orr.w	r3, r3, #33024	@ 0x8100
+ 8100586:	6013      	str	r3, [r2, #0]
+   __HAL_ART_ENABLE();                           /* Enable the Cortex-M4 ART */
+ 8100588:	4b1c      	ldr	r3, [pc, #112]	@ (81005fc <HAL_Init+0xac>)
+ 810058a:	681b      	ldr	r3, [r3, #0]
+ 810058c:	4a1b      	ldr	r2, [pc, #108]	@ (81005fc <HAL_Init+0xac>)
+ 810058e:	f043 0301 	orr.w	r3, r3, #1
+ 8100592:	6013      	str	r3, [r2, #0]
+#endif /* DUAL_CORE &&  CORE_CM4 */
+
+  /* Set Interrupt Group Priority */
+  HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+ 8100594:	2003      	movs	r0, #3
+ 8100596:	f000 f941 	bl	810081c <HAL_NVIC_SetPriorityGrouping>
+
+  /* Update the SystemCoreClock global variable */
+#if defined(RCC_D1CFGR_D1CPRE)
+  common_system_clock = HAL_RCC_GetSysClockFreq() >> ((D1CorePrescTable[(RCC->D1CFGR & RCC_D1CFGR_D1CPRE)>> RCC_D1CFGR_D1CPRE_Pos]) & 0x1FU);
+ 810059a:	f000 ffb3 	bl	8101504 <HAL_RCC_GetSysClockFreq>
+ 810059e:	4602      	mov	r2, r0
+ 81005a0:	4b15      	ldr	r3, [pc, #84]	@ (81005f8 <HAL_Init+0xa8>)
+ 81005a2:	699b      	ldr	r3, [r3, #24]
+ 81005a4:	0a1b      	lsrs	r3, r3, #8
+ 81005a6:	f003 030f 	and.w	r3, r3, #15
+ 81005aa:	4915      	ldr	r1, [pc, #84]	@ (8100600 <HAL_Init+0xb0>)
+ 81005ac:	5ccb      	ldrb	r3, [r1, r3]
+ 81005ae:	f003 031f 	and.w	r3, r3, #31
+ 81005b2:	fa22 f303 	lsr.w	r3, r2, r3
+ 81005b6:	607b      	str	r3, [r7, #4]
+  common_system_clock = HAL_RCC_GetSysClockFreq() >> ((D1CorePrescTable[(RCC->CDCFGR1 & RCC_CDCFGR1_CDCPRE)>> RCC_CDCFGR1_CDCPRE_Pos]) & 0x1FU);
+#endif
+
+  /* Update the SystemD2Clock global variable */
+#if defined(RCC_D1CFGR_HPRE)
+  SystemD2Clock = (common_system_clock >> ((D1CorePrescTable[(RCC->D1CFGR & RCC_D1CFGR_HPRE)>> RCC_D1CFGR_HPRE_Pos]) & 0x1FU));
+ 81005b8:	4b0f      	ldr	r3, [pc, #60]	@ (81005f8 <HAL_Init+0xa8>)
+ 81005ba:	699b      	ldr	r3, [r3, #24]
+ 81005bc:	f003 030f 	and.w	r3, r3, #15
+ 81005c0:	4a0f      	ldr	r2, [pc, #60]	@ (8100600 <HAL_Init+0xb0>)
+ 81005c2:	5cd3      	ldrb	r3, [r2, r3]
+ 81005c4:	f003 031f 	and.w	r3, r3, #31
+ 81005c8:	687a      	ldr	r2, [r7, #4]
+ 81005ca:	fa22 f303 	lsr.w	r3, r2, r3
+ 81005ce:	4a0d      	ldr	r2, [pc, #52]	@ (8100604 <HAL_Init+0xb4>)
+ 81005d0:	6013      	str	r3, [r2, #0]
+#else
+  SystemD2Clock = (common_system_clock >> ((D1CorePrescTable[(RCC->CDCFGR1 & RCC_CDCFGR1_HPRE)>> RCC_CDCFGR1_HPRE_Pos]) & 0x1FU));
+#endif
+
+#if defined(DUAL_CORE) && defined(CORE_CM4)
+  SystemCoreClock = SystemD2Clock;
+ 81005d2:	4b0c      	ldr	r3, [pc, #48]	@ (8100604 <HAL_Init+0xb4>)
+ 81005d4:	681b      	ldr	r3, [r3, #0]
+ 81005d6:	4a0c      	ldr	r2, [pc, #48]	@ (8100608 <HAL_Init+0xb8>)
+ 81005d8:	6013      	str	r3, [r2, #0]
+#else
+  SystemCoreClock = common_system_clock;
+#endif /* DUAL_CORE && CORE_CM4 */
+
+  /* Use systick as time base source and configure 1ms tick (default clock after Reset is HSI) */
+  if(HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK)
+ 81005da:	2000      	movs	r0, #0
+ 81005dc:	f000 f816 	bl	810060c <HAL_InitTick>
+ 81005e0:	4603      	mov	r3, r0
+ 81005e2:	2b00      	cmp	r3, #0
+ 81005e4:	d001      	beq.n	81005ea <HAL_Init+0x9a>
+  {
+    return HAL_ERROR;
+ 81005e6:	2301      	movs	r3, #1
+ 81005e8:	e002      	b.n	81005f0 <HAL_Init+0xa0>
+  }
+
+  /* Init the low level hardware */
+  HAL_MspInit();
+ 81005ea:	f7ff ff3b 	bl	8100464 <HAL_MspInit>
+
+  /* Return function status */
+  return HAL_OK;
+ 81005ee:	2300      	movs	r3, #0
+}
+ 81005f0:	4618      	mov	r0, r3
+ 81005f2:	3708      	adds	r7, #8
+ 81005f4:	46bd      	mov	sp, r7
+ 81005f6:	bd80      	pop	{r7, pc}
+ 81005f8:	58024400 	.word	0x58024400
+ 81005fc:	40024400 	.word	0x40024400
+ 8100600:	08101858 	.word	0x08101858
+ 8100604:	10000004 	.word	0x10000004
+ 8100608:	10000000 	.word	0x10000000
+
+0810060c <HAL_InitTick>:
+  *       implementation  in user file.
+  * @param TickPriority: Tick interrupt priority.
+  * @retval HAL status
+  */
+__weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
+{
+ 810060c:	b580      	push	{r7, lr}
+ 810060e:	b082      	sub	sp, #8
+ 8100610:	af00      	add	r7, sp, #0
+ 8100612:	6078      	str	r0, [r7, #4]
+  /* Check uwTickFreq for MisraC 2012 (even if uwTickFreq is a enum type that don't take the value zero)*/
+  if((uint32_t)uwTickFreq == 0UL)
+ 8100614:	4b15      	ldr	r3, [pc, #84]	@ (810066c <HAL_InitTick+0x60>)
+ 8100616:	781b      	ldrb	r3, [r3, #0]
+ 8100618:	2b00      	cmp	r3, #0
+ 810061a:	d101      	bne.n	8100620 <HAL_InitTick+0x14>
+  {
+    return HAL_ERROR;
+ 810061c:	2301      	movs	r3, #1
+ 810061e:	e021      	b.n	8100664 <HAL_InitTick+0x58>
+  }
+
+    /* Configure the SysTick to have interrupt in 1ms time basis*/
+    if (HAL_SYSTICK_Config(SystemCoreClock / (1000UL / (uint32_t)uwTickFreq)) > 0U)
+ 8100620:	4b13      	ldr	r3, [pc, #76]	@ (8100670 <HAL_InitTick+0x64>)
+ 8100622:	681a      	ldr	r2, [r3, #0]
+ 8100624:	4b11      	ldr	r3, [pc, #68]	@ (810066c <HAL_InitTick+0x60>)
+ 8100626:	781b      	ldrb	r3, [r3, #0]
+ 8100628:	4619      	mov	r1, r3
+ 810062a:	f44f 737a 	mov.w	r3, #1000	@ 0x3e8
+ 810062e:	fbb3 f3f1 	udiv	r3, r3, r1
+ 8100632:	fbb2 f3f3 	udiv	r3, r2, r3
+ 8100636:	4618      	mov	r0, r3
+ 8100638:	f000 f915 	bl	8100866 <HAL_SYSTICK_Config>
+ 810063c:	4603      	mov	r3, r0
+ 810063e:	2b00      	cmp	r3, #0
+ 8100640:	d001      	beq.n	8100646 <HAL_InitTick+0x3a>
+    {
+      return HAL_ERROR;
+ 8100642:	2301      	movs	r3, #1
+ 8100644:	e00e      	b.n	8100664 <HAL_InitTick+0x58>
+    }
+
+  /* Configure the SysTick IRQ priority */
+  if (TickPriority < (1UL << __NVIC_PRIO_BITS))
+ 8100646:	687b      	ldr	r3, [r7, #4]
+ 8100648:	2b0f      	cmp	r3, #15
+ 810064a:	d80a      	bhi.n	8100662 <HAL_InitTick+0x56>
+  {
+    HAL_NVIC_SetPriority(SysTick_IRQn, TickPriority, 0U);
+ 810064c:	2200      	movs	r2, #0
+ 810064e:	6879      	ldr	r1, [r7, #4]
+ 8100650:	f04f 30ff 	mov.w	r0, #4294967295
+ 8100654:	f000 f8ed 	bl	8100832 <HAL_NVIC_SetPriority>
+    uwTickPrio = TickPriority;
+ 8100658:	4a06      	ldr	r2, [pc, #24]	@ (8100674 <HAL_InitTick+0x68>)
+ 810065a:	687b      	ldr	r3, [r7, #4]
+ 810065c:	6013      	str	r3, [r2, #0]
+  {
+    return HAL_ERROR;
+  }
+
+  /* Return function status */
+  return HAL_OK;
+ 810065e:	2300      	movs	r3, #0
+ 8100660:	e000      	b.n	8100664 <HAL_InitTick+0x58>
+    return HAL_ERROR;
+ 8100662:	2301      	movs	r3, #1
+}
+ 8100664:	4618      	mov	r0, r3
+ 8100666:	3708      	adds	r7, #8
+ 8100668:	46bd      	mov	sp, r7
+ 810066a:	bd80      	pop	{r7, pc}
+ 810066c:	1000000c 	.word	0x1000000c
+ 8100670:	10000000 	.word	0x10000000
+ 8100674:	10000008 	.word	0x10000008
+
+08100678 <HAL_IncTick>:
+ * @note This function is declared as __weak to be overwritten in case of other
+  *      implementations in user file.
+  * @retval None
+  */
+__weak void HAL_IncTick(void)
+{
+ 8100678:	b480      	push	{r7}
+ 810067a:	af00      	add	r7, sp, #0
+  uwTick += (uint32_t)uwTickFreq;
+ 810067c:	4b06      	ldr	r3, [pc, #24]	@ (8100698 <HAL_IncTick+0x20>)
+ 810067e:	781b      	ldrb	r3, [r3, #0]
+ 8100680:	461a      	mov	r2, r3
+ 8100682:	4b06      	ldr	r3, [pc, #24]	@ (810069c <HAL_IncTick+0x24>)
+ 8100684:	681b      	ldr	r3, [r3, #0]
+ 8100686:	4413      	add	r3, r2
+ 8100688:	4a04      	ldr	r2, [pc, #16]	@ (810069c <HAL_IncTick+0x24>)
+ 810068a:	6013      	str	r3, [r2, #0]
+}
+ 810068c:	bf00      	nop
+ 810068e:	46bd      	mov	sp, r7
+ 8100690:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8100694:	4770      	bx	lr
+ 8100696:	bf00      	nop
+ 8100698:	1000000c 	.word	0x1000000c
+ 810069c:	100000a4 	.word	0x100000a4
+
+081006a0 <HAL_GetTick>:
+  * @note This function is declared as __weak to be overwritten in case of other
+  *       implementations in user file.
+  * @retval tick value
+  */
+__weak uint32_t HAL_GetTick(void)
+{
+ 81006a0:	b480      	push	{r7}
+ 81006a2:	af00      	add	r7, sp, #0
+  return uwTick;
+ 81006a4:	4b03      	ldr	r3, [pc, #12]	@ (81006b4 <HAL_GetTick+0x14>)
+ 81006a6:	681b      	ldr	r3, [r3, #0]
+}
+ 81006a8:	4618      	mov	r0, r3
+ 81006aa:	46bd      	mov	sp, r7
+ 81006ac:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 81006b0:	4770      	bx	lr
+ 81006b2:	bf00      	nop
+ 81006b4:	100000a4 	.word	0x100000a4
+
+081006b8 <__NVIC_SetPriorityGrouping>:
+           In case of a conflict between priority grouping and available
+           priority bits (__NVIC_PRIO_BITS), the smallest possible priority group is set.
+  \param [in]      PriorityGroup  Priority grouping field.
+ */
+__STATIC_INLINE void __NVIC_SetPriorityGrouping(uint32_t PriorityGroup)
+{
+ 81006b8:	b480      	push	{r7}
+ 81006ba:	b085      	sub	sp, #20
+ 81006bc:	af00      	add	r7, sp, #0
+ 81006be:	6078      	str	r0, [r7, #4]
+  uint32_t reg_value;
+  uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL);             /* only values 0..7 are used          */
+ 81006c0:	687b      	ldr	r3, [r7, #4]
+ 81006c2:	f003 0307 	and.w	r3, r3, #7
+ 81006c6:	60fb      	str	r3, [r7, #12]
+
+  reg_value  =  SCB->AIRCR;                                                   /* read old register configuration    */
+ 81006c8:	4b0c      	ldr	r3, [pc, #48]	@ (81006fc <__NVIC_SetPriorityGrouping+0x44>)
+ 81006ca:	68db      	ldr	r3, [r3, #12]
+ 81006cc:	60bb      	str	r3, [r7, #8]
+  reg_value &= ~((uint32_t)(SCB_AIRCR_VECTKEY_Msk | SCB_AIRCR_PRIGROUP_Msk)); /* clear bits to change               */
+ 81006ce:	68ba      	ldr	r2, [r7, #8]
+ 81006d0:	f64f 03ff 	movw	r3, #63743	@ 0xf8ff
+ 81006d4:	4013      	ands	r3, r2
+ 81006d6:	60bb      	str	r3, [r7, #8]
+  reg_value  =  (reg_value                                   |
+                ((uint32_t)0x5FAUL << SCB_AIRCR_VECTKEY_Pos) |
+                (PriorityGroupTmp << SCB_AIRCR_PRIGROUP_Pos)  );              /* Insert write key and priority group */
+ 81006d8:	68fb      	ldr	r3, [r7, #12]
+ 81006da:	021a      	lsls	r2, r3, #8
+                ((uint32_t)0x5FAUL << SCB_AIRCR_VECTKEY_Pos) |
+ 81006dc:	68bb      	ldr	r3, [r7, #8]
+ 81006de:	4313      	orrs	r3, r2
+  reg_value  =  (reg_value                                   |
+ 81006e0:	f043 63bf 	orr.w	r3, r3, #100139008	@ 0x5f80000
+ 81006e4:	f443 3300 	orr.w	r3, r3, #131072	@ 0x20000
+ 81006e8:	60bb      	str	r3, [r7, #8]
+  SCB->AIRCR =  reg_value;
+ 81006ea:	4a04      	ldr	r2, [pc, #16]	@ (81006fc <__NVIC_SetPriorityGrouping+0x44>)
+ 81006ec:	68bb      	ldr	r3, [r7, #8]
+ 81006ee:	60d3      	str	r3, [r2, #12]
+}
+ 81006f0:	bf00      	nop
+ 81006f2:	3714      	adds	r7, #20
+ 81006f4:	46bd      	mov	sp, r7
+ 81006f6:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 81006fa:	4770      	bx	lr
+ 81006fc:	e000ed00 	.word	0xe000ed00
+
+08100700 <__NVIC_GetPriorityGrouping>:
+  \brief   Get Priority Grouping
+  \details Reads the priority grouping field from the NVIC Interrupt Controller.
+  \return                Priority grouping field (SCB->AIRCR [10:8] PRIGROUP field).
+ */
+__STATIC_INLINE uint32_t __NVIC_GetPriorityGrouping(void)
+{
+ 8100700:	b480      	push	{r7}
+ 8100702:	af00      	add	r7, sp, #0
+  return ((uint32_t)((SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) >> SCB_AIRCR_PRIGROUP_Pos));
+ 8100704:	4b04      	ldr	r3, [pc, #16]	@ (8100718 <__NVIC_GetPriorityGrouping+0x18>)
+ 8100706:	68db      	ldr	r3, [r3, #12]
+ 8100708:	0a1b      	lsrs	r3, r3, #8
+ 810070a:	f003 0307 	and.w	r3, r3, #7
+}
+ 810070e:	4618      	mov	r0, r3
+ 8100710:	46bd      	mov	sp, r7
+ 8100712:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8100716:	4770      	bx	lr
+ 8100718:	e000ed00 	.word	0xe000ed00
+
+0810071c <__NVIC_SetPriority>:
+  \param [in]      IRQn  Interrupt number.
+  \param [in]  priority  Priority to set.
+  \note    The priority cannot be set for every processor exception.
+ */
+__STATIC_INLINE void __NVIC_SetPriority(IRQn_Type IRQn, uint32_t priority)
+{
+ 810071c:	b480      	push	{r7}
+ 810071e:	b083      	sub	sp, #12
+ 8100720:	af00      	add	r7, sp, #0
+ 8100722:	4603      	mov	r3, r0
+ 8100724:	6039      	str	r1, [r7, #0]
+ 8100726:	80fb      	strh	r3, [r7, #6]
+  if ((int32_t)(IRQn) >= 0)
+ 8100728:	f9b7 3006 	ldrsh.w	r3, [r7, #6]
+ 810072c:	2b00      	cmp	r3, #0
+ 810072e:	db0a      	blt.n	8100746 <__NVIC_SetPriority+0x2a>
+  {
+    NVIC->IP[((uint32_t)IRQn)]               = (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
+ 8100730:	683b      	ldr	r3, [r7, #0]
+ 8100732:	b2da      	uxtb	r2, r3
+ 8100734:	490c      	ldr	r1, [pc, #48]	@ (8100768 <__NVIC_SetPriority+0x4c>)
+ 8100736:	f9b7 3006 	ldrsh.w	r3, [r7, #6]
+ 810073a:	0112      	lsls	r2, r2, #4
+ 810073c:	b2d2      	uxtb	r2, r2
+ 810073e:	440b      	add	r3, r1
+ 8100740:	f883 2300 	strb.w	r2, [r3, #768]	@ 0x300
+  }
+  else
+  {
+    SCB->SHP[(((uint32_t)IRQn) & 0xFUL)-4UL] = (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
+  }
+}
+ 8100744:	e00a      	b.n	810075c <__NVIC_SetPriority+0x40>
+    SCB->SHP[(((uint32_t)IRQn) & 0xFUL)-4UL] = (uint8_t)((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t)0xFFUL);
+ 8100746:	683b      	ldr	r3, [r7, #0]
+ 8100748:	b2da      	uxtb	r2, r3
+ 810074a:	4908      	ldr	r1, [pc, #32]	@ (810076c <__NVIC_SetPriority+0x50>)
+ 810074c:	88fb      	ldrh	r3, [r7, #6]
+ 810074e:	f003 030f 	and.w	r3, r3, #15
+ 8100752:	3b04      	subs	r3, #4
+ 8100754:	0112      	lsls	r2, r2, #4
+ 8100756:	b2d2      	uxtb	r2, r2
+ 8100758:	440b      	add	r3, r1
+ 810075a:	761a      	strb	r2, [r3, #24]
+}
+ 810075c:	bf00      	nop
+ 810075e:	370c      	adds	r7, #12
+ 8100760:	46bd      	mov	sp, r7
+ 8100762:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8100766:	4770      	bx	lr
+ 8100768:	e000e100 	.word	0xe000e100
+ 810076c:	e000ed00 	.word	0xe000ed00
+
+08100770 <NVIC_EncodePriority>:
+  \param [in]   PreemptPriority  Preemptive priority value (starting from 0).
+  \param [in]       SubPriority  Subpriority value (starting from 0).
+  \return                        Encoded priority. Value can be used in the function \ref NVIC_SetPriority().
+ */
+__STATIC_INLINE uint32_t NVIC_EncodePriority (uint32_t PriorityGroup, uint32_t PreemptPriority, uint32_t SubPriority)
+{
+ 8100770:	b480      	push	{r7}
+ 8100772:	b089      	sub	sp, #36	@ 0x24
+ 8100774:	af00      	add	r7, sp, #0
+ 8100776:	60f8      	str	r0, [r7, #12]
+ 8100778:	60b9      	str	r1, [r7, #8]
+ 810077a:	607a      	str	r2, [r7, #4]
+  uint32_t PriorityGroupTmp = (PriorityGroup & (uint32_t)0x07UL);   /* only values 0..7 are used          */
+ 810077c:	68fb      	ldr	r3, [r7, #12]
+ 810077e:	f003 0307 	and.w	r3, r3, #7
+ 8100782:	61fb      	str	r3, [r7, #28]
+  uint32_t PreemptPriorityBits;
+  uint32_t SubPriorityBits;
+
+  PreemptPriorityBits = ((7UL - PriorityGroupTmp) > (uint32_t)(__NVIC_PRIO_BITS)) ? (uint32_t)(__NVIC_PRIO_BITS) : (uint32_t)(7UL - PriorityGroupTmp);
+ 8100784:	69fb      	ldr	r3, [r7, #28]
+ 8100786:	f1c3 0307 	rsb	r3, r3, #7
+ 810078a:	2b04      	cmp	r3, #4
+ 810078c:	bf28      	it	cs
+ 810078e:	2304      	movcs	r3, #4
+ 8100790:	61bb      	str	r3, [r7, #24]
+  SubPriorityBits     = ((PriorityGroupTmp + (uint32_t)(__NVIC_PRIO_BITS)) < (uint32_t)7UL) ? (uint32_t)0UL : (uint32_t)((PriorityGroupTmp - 7UL) + (uint32_t)(__NVIC_PRIO_BITS));
+ 8100792:	69fb      	ldr	r3, [r7, #28]
+ 8100794:	3304      	adds	r3, #4
+ 8100796:	2b06      	cmp	r3, #6
+ 8100798:	d902      	bls.n	81007a0 <NVIC_EncodePriority+0x30>
+ 810079a:	69fb      	ldr	r3, [r7, #28]
+ 810079c:	3b03      	subs	r3, #3
+ 810079e:	e000      	b.n	81007a2 <NVIC_EncodePriority+0x32>
+ 81007a0:	2300      	movs	r3, #0
+ 81007a2:	617b      	str	r3, [r7, #20]
+
+  return (
+           ((PreemptPriority & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL)) << SubPriorityBits) |
+ 81007a4:	f04f 32ff 	mov.w	r2, #4294967295
+ 81007a8:	69bb      	ldr	r3, [r7, #24]
+ 81007aa:	fa02 f303 	lsl.w	r3, r2, r3
+ 81007ae:	43da      	mvns	r2, r3
+ 81007b0:	68bb      	ldr	r3, [r7, #8]
+ 81007b2:	401a      	ands	r2, r3
+ 81007b4:	697b      	ldr	r3, [r7, #20]
+ 81007b6:	409a      	lsls	r2, r3
+           ((SubPriority     & (uint32_t)((1UL << (SubPriorityBits    )) - 1UL)))
+ 81007b8:	f04f 31ff 	mov.w	r1, #4294967295
+ 81007bc:	697b      	ldr	r3, [r7, #20]
+ 81007be:	fa01 f303 	lsl.w	r3, r1, r3
+ 81007c2:	43d9      	mvns	r1, r3
+ 81007c4:	687b      	ldr	r3, [r7, #4]
+ 81007c6:	400b      	ands	r3, r1
+           ((PreemptPriority & (uint32_t)((1UL << (PreemptPriorityBits)) - 1UL)) << SubPriorityBits) |
+ 81007c8:	4313      	orrs	r3, r2
+         );
+}
+ 81007ca:	4618      	mov	r0, r3
+ 81007cc:	3724      	adds	r7, #36	@ 0x24
+ 81007ce:	46bd      	mov	sp, r7
+ 81007d0:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 81007d4:	4770      	bx	lr
+	...
+
+081007d8 <SysTick_Config>:
+  \note    When the variable <b>__Vendor_SysTickConfig</b> is set to 1, then the
+           function <b>SysTick_Config</b> is not included. In this case, the file <b><i>device</i>.h</b>
+           must contain a vendor-specific implementation of this function.
+ */
+__STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
+{
+ 81007d8:	b580      	push	{r7, lr}
+ 81007da:	b082      	sub	sp, #8
+ 81007dc:	af00      	add	r7, sp, #0
+ 81007de:	6078      	str	r0, [r7, #4]
+  if ((ticks - 1UL) > SysTick_LOAD_RELOAD_Msk)
+ 81007e0:	687b      	ldr	r3, [r7, #4]
+ 81007e2:	3b01      	subs	r3, #1
+ 81007e4:	f1b3 7f80 	cmp.w	r3, #16777216	@ 0x1000000
+ 81007e8:	d301      	bcc.n	81007ee <SysTick_Config+0x16>
+  {
+    return (1UL);                                                   /* Reload value impossible */
+ 81007ea:	2301      	movs	r3, #1
+ 81007ec:	e00f      	b.n	810080e <SysTick_Config+0x36>
+  }
+
+  SysTick->LOAD  = (uint32_t)(ticks - 1UL);                         /* set reload register */
+ 81007ee:	4a0a      	ldr	r2, [pc, #40]	@ (8100818 <SysTick_Config+0x40>)
+ 81007f0:	687b      	ldr	r3, [r7, #4]
+ 81007f2:	3b01      	subs	r3, #1
+ 81007f4:	6053      	str	r3, [r2, #4]
+  NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
+ 81007f6:	210f      	movs	r1, #15
+ 81007f8:	f04f 30ff 	mov.w	r0, #4294967295
+ 81007fc:	f7ff ff8e 	bl	810071c <__NVIC_SetPriority>
+  SysTick->VAL   = 0UL;                                             /* Load the SysTick Counter Value */
+ 8100800:	4b05      	ldr	r3, [pc, #20]	@ (8100818 <SysTick_Config+0x40>)
+ 8100802:	2200      	movs	r2, #0
+ 8100804:	609a      	str	r2, [r3, #8]
+  SysTick->CTRL  = SysTick_CTRL_CLKSOURCE_Msk |
+ 8100806:	4b04      	ldr	r3, [pc, #16]	@ (8100818 <SysTick_Config+0x40>)
+ 8100808:	2207      	movs	r2, #7
+ 810080a:	601a      	str	r2, [r3, #0]
+                   SysTick_CTRL_TICKINT_Msk   |
+                   SysTick_CTRL_ENABLE_Msk;                         /* Enable SysTick IRQ and SysTick Timer */
+  return (0UL);                                                     /* Function successful */
+ 810080c:	2300      	movs	r3, #0
+}
+ 810080e:	4618      	mov	r0, r3
+ 8100810:	3708      	adds	r7, #8
+ 8100812:	46bd      	mov	sp, r7
+ 8100814:	bd80      	pop	{r7, pc}
+ 8100816:	bf00      	nop
+ 8100818:	e000e010 	.word	0xe000e010
+
+0810081c <HAL_NVIC_SetPriorityGrouping>:
+  * @note   When the NVIC_PriorityGroup_0 is selected, IRQ preemption is no more possible.
+  *         The pending IRQ priority will be managed only by the subpriority.
+  * @retval None
+  */
+void HAL_NVIC_SetPriorityGrouping(uint32_t PriorityGroup)
+{
+ 810081c:	b580      	push	{r7, lr}
+ 810081e:	b082      	sub	sp, #8
+ 8100820:	af00      	add	r7, sp, #0
+ 8100822:	6078      	str	r0, [r7, #4]
+  /* Check the parameters */
+  assert_param(IS_NVIC_PRIORITY_GROUP(PriorityGroup));
+
+  /* Set the PRIGROUP[10:8] bits according to the PriorityGroup parameter value */
+  NVIC_SetPriorityGrouping(PriorityGroup);
+ 8100824:	6878      	ldr	r0, [r7, #4]
+ 8100826:	f7ff ff47 	bl	81006b8 <__NVIC_SetPriorityGrouping>
+}
+ 810082a:	bf00      	nop
+ 810082c:	3708      	adds	r7, #8
+ 810082e:	46bd      	mov	sp, r7
+ 8100830:	bd80      	pop	{r7, pc}
+
+08100832 <HAL_NVIC_SetPriority>:
+  *         This parameter can be a value between 0 and 15
+  *         A lower priority value indicates a higher priority.
+  * @retval None
+  */
+void HAL_NVIC_SetPriority(IRQn_Type IRQn, uint32_t PreemptPriority, uint32_t SubPriority)
+{
+ 8100832:	b580      	push	{r7, lr}
+ 8100834:	b086      	sub	sp, #24
+ 8100836:	af00      	add	r7, sp, #0
+ 8100838:	4603      	mov	r3, r0
+ 810083a:	60b9      	str	r1, [r7, #8]
+ 810083c:	607a      	str	r2, [r7, #4]
+ 810083e:	81fb      	strh	r3, [r7, #14]
+
+  /* Check the parameters */
+  assert_param(IS_NVIC_SUB_PRIORITY(SubPriority));
+  assert_param(IS_NVIC_PREEMPTION_PRIORITY(PreemptPriority));
+
+  prioritygroup = NVIC_GetPriorityGrouping();
+ 8100840:	f7ff ff5e 	bl	8100700 <__NVIC_GetPriorityGrouping>
+ 8100844:	6178      	str	r0, [r7, #20]
+
+  NVIC_SetPriority(IRQn, NVIC_EncodePriority(prioritygroup, PreemptPriority, SubPriority));
+ 8100846:	687a      	ldr	r2, [r7, #4]
+ 8100848:	68b9      	ldr	r1, [r7, #8]
+ 810084a:	6978      	ldr	r0, [r7, #20]
+ 810084c:	f7ff ff90 	bl	8100770 <NVIC_EncodePriority>
+ 8100850:	4602      	mov	r2, r0
+ 8100852:	f9b7 300e 	ldrsh.w	r3, [r7, #14]
+ 8100856:	4611      	mov	r1, r2
+ 8100858:	4618      	mov	r0, r3
+ 810085a:	f7ff ff5f 	bl	810071c <__NVIC_SetPriority>
+}
+ 810085e:	bf00      	nop
+ 8100860:	3718      	adds	r7, #24
+ 8100862:	46bd      	mov	sp, r7
+ 8100864:	bd80      	pop	{r7, pc}
+
+08100866 <HAL_SYSTICK_Config>:
+  * @param  TicksNumb Specifies the ticks Number of ticks between two interrupts.
+  * @retval status   - 0  Function succeeded.
+  *                  - 1  Function failed.
+  */
+uint32_t HAL_SYSTICK_Config(uint32_t TicksNumb)
+{
+ 8100866:	b580      	push	{r7, lr}
+ 8100868:	b082      	sub	sp, #8
+ 810086a:	af00      	add	r7, sp, #0
+ 810086c:	6078      	str	r0, [r7, #4]
+   return SysTick_Config(TicksNumb);
+ 810086e:	6878      	ldr	r0, [r7, #4]
+ 8100870:	f7ff ffb2 	bl	81007d8 <SysTick_Config>
+ 8100874:	4603      	mov	r3, r0
+}
+ 8100876:	4618      	mov	r0, r3
+ 8100878:	3708      	adds	r7, #8
+ 810087a:	46bd      	mov	sp, r7
+ 810087c:	bd80      	pop	{r7, pc}
+	...
+
+08100880 <HAL_GetCurrentCPUID>:
+/**
+  * @brief  Returns the current CPU ID.
+  * @retval CPU identifier
+  */
+uint32_t HAL_GetCurrentCPUID(void)
+{
+ 8100880:	b480      	push	{r7}
+ 8100882:	af00      	add	r7, sp, #0
+  if (((SCB->CPUID & 0x000000F0U) >> 4 )== 0x7U)
+ 8100884:	4b06      	ldr	r3, [pc, #24]	@ (81008a0 <HAL_GetCurrentCPUID+0x20>)
+ 8100886:	681b      	ldr	r3, [r3, #0]
+ 8100888:	f003 03f0 	and.w	r3, r3, #240	@ 0xf0
+ 810088c:	2b70      	cmp	r3, #112	@ 0x70
+ 810088e:	d101      	bne.n	8100894 <HAL_GetCurrentCPUID+0x14>
+  {
+    return  CM7_CPUID;
+ 8100890:	2303      	movs	r3, #3
+ 8100892:	e000      	b.n	8100896 <HAL_GetCurrentCPUID+0x16>
+  }
+  else
+  {
+    return CM4_CPUID;
+ 8100894:	2301      	movs	r3, #1
+  }
+}
+ 8100896:	4618      	mov	r0, r3
+ 8100898:	46bd      	mov	sp, r7
+ 810089a:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 810089e:	4770      	bx	lr
+ 81008a0:	e000ed00 	.word	0xe000ed00
+
+081008a4 <HAL_DMA_Init>:
+  * @param  hdma: Pointer to a DMA_HandleTypeDef structure that contains
+  *               the configuration information for the specified DMA Stream.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_DMA_Init(DMA_HandleTypeDef *hdma)
+{
+ 81008a4:	b580      	push	{r7, lr}
+ 81008a6:	b086      	sub	sp, #24
+ 81008a8:	af00      	add	r7, sp, #0
+ 81008aa:	6078      	str	r0, [r7, #4]
+  uint32_t registerValue;
+  uint32_t tickstart = HAL_GetTick();
+ 81008ac:	f7ff fef8 	bl	81006a0 <HAL_GetTick>
+ 81008b0:	6138      	str	r0, [r7, #16]
+  DMA_Base_Registers *regs_dma;
+  BDMA_Base_Registers *regs_bdma;
+
+  /* Check the DMA peripheral handle */
+  if(hdma == NULL)
+ 81008b2:	687b      	ldr	r3, [r7, #4]
+ 81008b4:	2b00      	cmp	r3, #0
+ 81008b6:	d101      	bne.n	81008bc <HAL_DMA_Init+0x18>
+  {
+    return HAL_ERROR;
+ 81008b8:	2301      	movs	r3, #1
+ 81008ba:	e314      	b.n	8100ee6 <HAL_DMA_Init+0x642>
+  assert_param(IS_DMA_PERIPHERAL_DATA_SIZE(hdma->Init.PeriphDataAlignment));
+  assert_param(IS_DMA_MEMORY_DATA_SIZE(hdma->Init.MemDataAlignment));
+  assert_param(IS_DMA_MODE(hdma->Init.Mode));
+  assert_param(IS_DMA_PRIORITY(hdma->Init.Priority));
+
+  if(IS_DMA_STREAM_INSTANCE(hdma->Instance) != 0U) /* DMA1 or DMA2 instance */
+ 81008bc:	687b      	ldr	r3, [r7, #4]
+ 81008be:	681b      	ldr	r3, [r3, #0]
+ 81008c0:	4a66      	ldr	r2, [pc, #408]	@ (8100a5c <HAL_DMA_Init+0x1b8>)
+ 81008c2:	4293      	cmp	r3, r2
+ 81008c4:	d04a      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 81008c6:	687b      	ldr	r3, [r7, #4]
+ 81008c8:	681b      	ldr	r3, [r3, #0]
+ 81008ca:	4a65      	ldr	r2, [pc, #404]	@ (8100a60 <HAL_DMA_Init+0x1bc>)
+ 81008cc:	4293      	cmp	r3, r2
+ 81008ce:	d045      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 81008d0:	687b      	ldr	r3, [r7, #4]
+ 81008d2:	681b      	ldr	r3, [r3, #0]
+ 81008d4:	4a63      	ldr	r2, [pc, #396]	@ (8100a64 <HAL_DMA_Init+0x1c0>)
+ 81008d6:	4293      	cmp	r3, r2
+ 81008d8:	d040      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 81008da:	687b      	ldr	r3, [r7, #4]
+ 81008dc:	681b      	ldr	r3, [r3, #0]
+ 81008de:	4a62      	ldr	r2, [pc, #392]	@ (8100a68 <HAL_DMA_Init+0x1c4>)
+ 81008e0:	4293      	cmp	r3, r2
+ 81008e2:	d03b      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 81008e4:	687b      	ldr	r3, [r7, #4]
+ 81008e6:	681b      	ldr	r3, [r3, #0]
+ 81008e8:	4a60      	ldr	r2, [pc, #384]	@ (8100a6c <HAL_DMA_Init+0x1c8>)
+ 81008ea:	4293      	cmp	r3, r2
+ 81008ec:	d036      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 81008ee:	687b      	ldr	r3, [r7, #4]
+ 81008f0:	681b      	ldr	r3, [r3, #0]
+ 81008f2:	4a5f      	ldr	r2, [pc, #380]	@ (8100a70 <HAL_DMA_Init+0x1cc>)
+ 81008f4:	4293      	cmp	r3, r2
+ 81008f6:	d031      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 81008f8:	687b      	ldr	r3, [r7, #4]
+ 81008fa:	681b      	ldr	r3, [r3, #0]
+ 81008fc:	4a5d      	ldr	r2, [pc, #372]	@ (8100a74 <HAL_DMA_Init+0x1d0>)
+ 81008fe:	4293      	cmp	r3, r2
+ 8100900:	d02c      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 8100902:	687b      	ldr	r3, [r7, #4]
+ 8100904:	681b      	ldr	r3, [r3, #0]
+ 8100906:	4a5c      	ldr	r2, [pc, #368]	@ (8100a78 <HAL_DMA_Init+0x1d4>)
+ 8100908:	4293      	cmp	r3, r2
+ 810090a:	d027      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 810090c:	687b      	ldr	r3, [r7, #4]
+ 810090e:	681b      	ldr	r3, [r3, #0]
+ 8100910:	4a5a      	ldr	r2, [pc, #360]	@ (8100a7c <HAL_DMA_Init+0x1d8>)
+ 8100912:	4293      	cmp	r3, r2
+ 8100914:	d022      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 8100916:	687b      	ldr	r3, [r7, #4]
+ 8100918:	681b      	ldr	r3, [r3, #0]
+ 810091a:	4a59      	ldr	r2, [pc, #356]	@ (8100a80 <HAL_DMA_Init+0x1dc>)
+ 810091c:	4293      	cmp	r3, r2
+ 810091e:	d01d      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 8100920:	687b      	ldr	r3, [r7, #4]
+ 8100922:	681b      	ldr	r3, [r3, #0]
+ 8100924:	4a57      	ldr	r2, [pc, #348]	@ (8100a84 <HAL_DMA_Init+0x1e0>)
+ 8100926:	4293      	cmp	r3, r2
+ 8100928:	d018      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 810092a:	687b      	ldr	r3, [r7, #4]
+ 810092c:	681b      	ldr	r3, [r3, #0]
+ 810092e:	4a56      	ldr	r2, [pc, #344]	@ (8100a88 <HAL_DMA_Init+0x1e4>)
+ 8100930:	4293      	cmp	r3, r2
+ 8100932:	d013      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 8100934:	687b      	ldr	r3, [r7, #4]
+ 8100936:	681b      	ldr	r3, [r3, #0]
+ 8100938:	4a54      	ldr	r2, [pc, #336]	@ (8100a8c <HAL_DMA_Init+0x1e8>)
+ 810093a:	4293      	cmp	r3, r2
+ 810093c:	d00e      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 810093e:	687b      	ldr	r3, [r7, #4]
+ 8100940:	681b      	ldr	r3, [r3, #0]
+ 8100942:	4a53      	ldr	r2, [pc, #332]	@ (8100a90 <HAL_DMA_Init+0x1ec>)
+ 8100944:	4293      	cmp	r3, r2
+ 8100946:	d009      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 8100948:	687b      	ldr	r3, [r7, #4]
+ 810094a:	681b      	ldr	r3, [r3, #0]
+ 810094c:	4a51      	ldr	r2, [pc, #324]	@ (8100a94 <HAL_DMA_Init+0x1f0>)
+ 810094e:	4293      	cmp	r3, r2
+ 8100950:	d004      	beq.n	810095c <HAL_DMA_Init+0xb8>
+ 8100952:	687b      	ldr	r3, [r7, #4]
+ 8100954:	681b      	ldr	r3, [r3, #0]
+ 8100956:	4a50      	ldr	r2, [pc, #320]	@ (8100a98 <HAL_DMA_Init+0x1f4>)
+ 8100958:	4293      	cmp	r3, r2
+ 810095a:	d101      	bne.n	8100960 <HAL_DMA_Init+0xbc>
+ 810095c:	2301      	movs	r3, #1
+ 810095e:	e000      	b.n	8100962 <HAL_DMA_Init+0xbe>
+ 8100960:	2300      	movs	r3, #0
+ 8100962:	2b00      	cmp	r3, #0
+ 8100964:	f000 813b 	beq.w	8100bde <HAL_DMA_Init+0x33a>
+      assert_param(IS_DMA_MEMORY_BURST(hdma->Init.MemBurst));
+      assert_param(IS_DMA_PERIPHERAL_BURST(hdma->Init.PeriphBurst));
+    }
+
+    /* Change DMA peripheral state */
+    hdma->State = HAL_DMA_STATE_BUSY;
+ 8100968:	687b      	ldr	r3, [r7, #4]
+ 810096a:	2202      	movs	r2, #2
+ 810096c:	f883 2035 	strb.w	r2, [r3, #53]	@ 0x35
+
+    /* Allocate lock resource */
+    __HAL_UNLOCK(hdma);
+ 8100970:	687b      	ldr	r3, [r7, #4]
+ 8100972:	2200      	movs	r2, #0
+ 8100974:	f883 2034 	strb.w	r2, [r3, #52]	@ 0x34
+
+    /* Disable the peripheral */
+    __HAL_DMA_DISABLE(hdma);
+ 8100978:	687b      	ldr	r3, [r7, #4]
+ 810097a:	681b      	ldr	r3, [r3, #0]
+ 810097c:	4a37      	ldr	r2, [pc, #220]	@ (8100a5c <HAL_DMA_Init+0x1b8>)
+ 810097e:	4293      	cmp	r3, r2
+ 8100980:	d04a      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 8100982:	687b      	ldr	r3, [r7, #4]
+ 8100984:	681b      	ldr	r3, [r3, #0]
+ 8100986:	4a36      	ldr	r2, [pc, #216]	@ (8100a60 <HAL_DMA_Init+0x1bc>)
+ 8100988:	4293      	cmp	r3, r2
+ 810098a:	d045      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 810098c:	687b      	ldr	r3, [r7, #4]
+ 810098e:	681b      	ldr	r3, [r3, #0]
+ 8100990:	4a34      	ldr	r2, [pc, #208]	@ (8100a64 <HAL_DMA_Init+0x1c0>)
+ 8100992:	4293      	cmp	r3, r2
+ 8100994:	d040      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 8100996:	687b      	ldr	r3, [r7, #4]
+ 8100998:	681b      	ldr	r3, [r3, #0]
+ 810099a:	4a33      	ldr	r2, [pc, #204]	@ (8100a68 <HAL_DMA_Init+0x1c4>)
+ 810099c:	4293      	cmp	r3, r2
+ 810099e:	d03b      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 81009a0:	687b      	ldr	r3, [r7, #4]
+ 81009a2:	681b      	ldr	r3, [r3, #0]
+ 81009a4:	4a31      	ldr	r2, [pc, #196]	@ (8100a6c <HAL_DMA_Init+0x1c8>)
+ 81009a6:	4293      	cmp	r3, r2
+ 81009a8:	d036      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 81009aa:	687b      	ldr	r3, [r7, #4]
+ 81009ac:	681b      	ldr	r3, [r3, #0]
+ 81009ae:	4a30      	ldr	r2, [pc, #192]	@ (8100a70 <HAL_DMA_Init+0x1cc>)
+ 81009b0:	4293      	cmp	r3, r2
+ 81009b2:	d031      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 81009b4:	687b      	ldr	r3, [r7, #4]
+ 81009b6:	681b      	ldr	r3, [r3, #0]
+ 81009b8:	4a2e      	ldr	r2, [pc, #184]	@ (8100a74 <HAL_DMA_Init+0x1d0>)
+ 81009ba:	4293      	cmp	r3, r2
+ 81009bc:	d02c      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 81009be:	687b      	ldr	r3, [r7, #4]
+ 81009c0:	681b      	ldr	r3, [r3, #0]
+ 81009c2:	4a2d      	ldr	r2, [pc, #180]	@ (8100a78 <HAL_DMA_Init+0x1d4>)
+ 81009c4:	4293      	cmp	r3, r2
+ 81009c6:	d027      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 81009c8:	687b      	ldr	r3, [r7, #4]
+ 81009ca:	681b      	ldr	r3, [r3, #0]
+ 81009cc:	4a2b      	ldr	r2, [pc, #172]	@ (8100a7c <HAL_DMA_Init+0x1d8>)
+ 81009ce:	4293      	cmp	r3, r2
+ 81009d0:	d022      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 81009d2:	687b      	ldr	r3, [r7, #4]
+ 81009d4:	681b      	ldr	r3, [r3, #0]
+ 81009d6:	4a2a      	ldr	r2, [pc, #168]	@ (8100a80 <HAL_DMA_Init+0x1dc>)
+ 81009d8:	4293      	cmp	r3, r2
+ 81009da:	d01d      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 81009dc:	687b      	ldr	r3, [r7, #4]
+ 81009de:	681b      	ldr	r3, [r3, #0]
+ 81009e0:	4a28      	ldr	r2, [pc, #160]	@ (8100a84 <HAL_DMA_Init+0x1e0>)
+ 81009e2:	4293      	cmp	r3, r2
+ 81009e4:	d018      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 81009e6:	687b      	ldr	r3, [r7, #4]
+ 81009e8:	681b      	ldr	r3, [r3, #0]
+ 81009ea:	4a27      	ldr	r2, [pc, #156]	@ (8100a88 <HAL_DMA_Init+0x1e4>)
+ 81009ec:	4293      	cmp	r3, r2
+ 81009ee:	d013      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 81009f0:	687b      	ldr	r3, [r7, #4]
+ 81009f2:	681b      	ldr	r3, [r3, #0]
+ 81009f4:	4a25      	ldr	r2, [pc, #148]	@ (8100a8c <HAL_DMA_Init+0x1e8>)
+ 81009f6:	4293      	cmp	r3, r2
+ 81009f8:	d00e      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 81009fa:	687b      	ldr	r3, [r7, #4]
+ 81009fc:	681b      	ldr	r3, [r3, #0]
+ 81009fe:	4a24      	ldr	r2, [pc, #144]	@ (8100a90 <HAL_DMA_Init+0x1ec>)
+ 8100a00:	4293      	cmp	r3, r2
+ 8100a02:	d009      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 8100a04:	687b      	ldr	r3, [r7, #4]
+ 8100a06:	681b      	ldr	r3, [r3, #0]
+ 8100a08:	4a22      	ldr	r2, [pc, #136]	@ (8100a94 <HAL_DMA_Init+0x1f0>)
+ 8100a0a:	4293      	cmp	r3, r2
+ 8100a0c:	d004      	beq.n	8100a18 <HAL_DMA_Init+0x174>
+ 8100a0e:	687b      	ldr	r3, [r7, #4]
+ 8100a10:	681b      	ldr	r3, [r3, #0]
+ 8100a12:	4a21      	ldr	r2, [pc, #132]	@ (8100a98 <HAL_DMA_Init+0x1f4>)
+ 8100a14:	4293      	cmp	r3, r2
+ 8100a16:	d108      	bne.n	8100a2a <HAL_DMA_Init+0x186>
+ 8100a18:	687b      	ldr	r3, [r7, #4]
+ 8100a1a:	681b      	ldr	r3, [r3, #0]
+ 8100a1c:	681a      	ldr	r2, [r3, #0]
+ 8100a1e:	687b      	ldr	r3, [r7, #4]
+ 8100a20:	681b      	ldr	r3, [r3, #0]
+ 8100a22:	f022 0201 	bic.w	r2, r2, #1
+ 8100a26:	601a      	str	r2, [r3, #0]
+ 8100a28:	e007      	b.n	8100a3a <HAL_DMA_Init+0x196>
+ 8100a2a:	687b      	ldr	r3, [r7, #4]
+ 8100a2c:	681b      	ldr	r3, [r3, #0]
+ 8100a2e:	681a      	ldr	r2, [r3, #0]
+ 8100a30:	687b      	ldr	r3, [r7, #4]
+ 8100a32:	681b      	ldr	r3, [r3, #0]
+ 8100a34:	f022 0201 	bic.w	r2, r2, #1
+ 8100a38:	601a      	str	r2, [r3, #0]
+
+    /* Check if the DMA Stream is effectively disabled */
+    while((((DMA_Stream_TypeDef   *)hdma->Instance)->CR & DMA_SxCR_EN) != 0U)
+ 8100a3a:	e02f      	b.n	8100a9c <HAL_DMA_Init+0x1f8>
+    {
+      /* Check for the Timeout */
+      if((HAL_GetTick() - tickstart ) > HAL_TIMEOUT_DMA_ABORT)
+ 8100a3c:	f7ff fe30 	bl	81006a0 <HAL_GetTick>
+ 8100a40:	4602      	mov	r2, r0
+ 8100a42:	693b      	ldr	r3, [r7, #16]
+ 8100a44:	1ad3      	subs	r3, r2, r3
+ 8100a46:	2b05      	cmp	r3, #5
+ 8100a48:	d928      	bls.n	8100a9c <HAL_DMA_Init+0x1f8>
+      {
+        /* Update error code */
+        hdma->ErrorCode = HAL_DMA_ERROR_TIMEOUT;
+ 8100a4a:	687b      	ldr	r3, [r7, #4]
+ 8100a4c:	2220      	movs	r2, #32
+ 8100a4e:	655a      	str	r2, [r3, #84]	@ 0x54
+
+        /* Change the DMA state */
+        hdma->State = HAL_DMA_STATE_ERROR;
+ 8100a50:	687b      	ldr	r3, [r7, #4]
+ 8100a52:	2203      	movs	r2, #3
+ 8100a54:	f883 2035 	strb.w	r2, [r3, #53]	@ 0x35
+
+        return HAL_ERROR;
+ 8100a58:	2301      	movs	r3, #1
+ 8100a5a:	e244      	b.n	8100ee6 <HAL_DMA_Init+0x642>
+ 8100a5c:	40020010 	.word	0x40020010
+ 8100a60:	40020028 	.word	0x40020028
+ 8100a64:	40020040 	.word	0x40020040
+ 8100a68:	40020058 	.word	0x40020058
+ 8100a6c:	40020070 	.word	0x40020070
+ 8100a70:	40020088 	.word	0x40020088
+ 8100a74:	400200a0 	.word	0x400200a0
+ 8100a78:	400200b8 	.word	0x400200b8
+ 8100a7c:	40020410 	.word	0x40020410
+ 8100a80:	40020428 	.word	0x40020428
+ 8100a84:	40020440 	.word	0x40020440
+ 8100a88:	40020458 	.word	0x40020458
+ 8100a8c:	40020470 	.word	0x40020470
+ 8100a90:	40020488 	.word	0x40020488
+ 8100a94:	400204a0 	.word	0x400204a0
+ 8100a98:	400204b8 	.word	0x400204b8
+    while((((DMA_Stream_TypeDef   *)hdma->Instance)->CR & DMA_SxCR_EN) != 0U)
+ 8100a9c:	687b      	ldr	r3, [r7, #4]
+ 8100a9e:	681b      	ldr	r3, [r3, #0]
+ 8100aa0:	681b      	ldr	r3, [r3, #0]
+ 8100aa2:	f003 0301 	and.w	r3, r3, #1
+ 8100aa6:	2b00      	cmp	r3, #0
+ 8100aa8:	d1c8      	bne.n	8100a3c <HAL_DMA_Init+0x198>
+      }
+    }
+
+    /* Get the CR register value */
+    registerValue = ((DMA_Stream_TypeDef   *)hdma->Instance)->CR;
+ 8100aaa:	687b      	ldr	r3, [r7, #4]
+ 8100aac:	681b      	ldr	r3, [r3, #0]
+ 8100aae:	681b      	ldr	r3, [r3, #0]
+ 8100ab0:	617b      	str	r3, [r7, #20]
+
+    /* Clear CHSEL, MBURST, PBURST, PL, MSIZE, PSIZE, MINC, PINC, CIRC, DIR, CT and DBM bits */
+    registerValue &= ((uint32_t)~(DMA_SxCR_MBURST | DMA_SxCR_PBURST | \
+ 8100ab2:	697a      	ldr	r2, [r7, #20]
+ 8100ab4:	4b84      	ldr	r3, [pc, #528]	@ (8100cc8 <HAL_DMA_Init+0x424>)
+ 8100ab6:	4013      	ands	r3, r2
+ 8100ab8:	617b      	str	r3, [r7, #20]
+                        DMA_SxCR_PL    | DMA_SxCR_MSIZE  | DMA_SxCR_PSIZE  | \
+                        DMA_SxCR_MINC  | DMA_SxCR_PINC   | DMA_SxCR_CIRC   | \
+                        DMA_SxCR_DIR   | DMA_SxCR_CT     | DMA_SxCR_DBM));
+
+    /* Prepare the DMA Stream configuration */
+    registerValue |=  hdma->Init.Direction           |
+ 8100aba:	687b      	ldr	r3, [r7, #4]
+ 8100abc:	689a      	ldr	r2, [r3, #8]
+            hdma->Init.PeriphInc           | hdma->Init.MemInc           |
+ 8100abe:	687b      	ldr	r3, [r7, #4]
+ 8100ac0:	68db      	ldr	r3, [r3, #12]
+    registerValue |=  hdma->Init.Direction           |
+ 8100ac2:	431a      	orrs	r2, r3
+            hdma->Init.PeriphInc           | hdma->Init.MemInc           |
+ 8100ac4:	687b      	ldr	r3, [r7, #4]
+ 8100ac6:	691b      	ldr	r3, [r3, #16]
+ 8100ac8:	431a      	orrs	r2, r3
+            hdma->Init.PeriphDataAlignment | hdma->Init.MemDataAlignment |
+ 8100aca:	687b      	ldr	r3, [r7, #4]
+ 8100acc:	695b      	ldr	r3, [r3, #20]
+            hdma->Init.PeriphInc           | hdma->Init.MemInc           |
+ 8100ace:	431a      	orrs	r2, r3
+            hdma->Init.PeriphDataAlignment | hdma->Init.MemDataAlignment |
+ 8100ad0:	687b      	ldr	r3, [r7, #4]
+ 8100ad2:	699b      	ldr	r3, [r3, #24]
+ 8100ad4:	431a      	orrs	r2, r3
+            hdma->Init.Mode                | hdma->Init.Priority;
+ 8100ad6:	687b      	ldr	r3, [r7, #4]
+ 8100ad8:	69db      	ldr	r3, [r3, #28]
+            hdma->Init.PeriphDataAlignment | hdma->Init.MemDataAlignment |
+ 8100ada:	431a      	orrs	r2, r3
+            hdma->Init.Mode                | hdma->Init.Priority;
+ 8100adc:	687b      	ldr	r3, [r7, #4]
+ 8100ade:	6a1b      	ldr	r3, [r3, #32]
+ 8100ae0:	4313      	orrs	r3, r2
+    registerValue |=  hdma->Init.Direction           |
+ 8100ae2:	697a      	ldr	r2, [r7, #20]
+ 8100ae4:	4313      	orrs	r3, r2
+ 8100ae6:	617b      	str	r3, [r7, #20]
+
+    /* the Memory burst and peripheral burst are not used when the FIFO is disabled */
+    if(hdma->Init.FIFOMode == DMA_FIFOMODE_ENABLE)
+ 8100ae8:	687b      	ldr	r3, [r7, #4]
+ 8100aea:	6a5b      	ldr	r3, [r3, #36]	@ 0x24
+ 8100aec:	2b04      	cmp	r3, #4
+ 8100aee:	d107      	bne.n	8100b00 <HAL_DMA_Init+0x25c>
+    {
+      /* Get memory burst and peripheral burst */
+      registerValue |=  hdma->Init.MemBurst | hdma->Init.PeriphBurst;
+ 8100af0:	687b      	ldr	r3, [r7, #4]
+ 8100af2:	6ada      	ldr	r2, [r3, #44]	@ 0x2c
+ 8100af4:	687b      	ldr	r3, [r7, #4]
+ 8100af6:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8100af8:	4313      	orrs	r3, r2
+ 8100afa:	697a      	ldr	r2, [r7, #20]
+ 8100afc:	4313      	orrs	r3, r2
+ 8100afe:	617b      	str	r3, [r7, #20]
+    }
+
+    /* Work around for Errata 2.22: UART/USART- DMA transfer lock: DMA stream could be
+                                    lock when transferring data to/from USART/UART */
+#if (STM32H7_DEV_ID == 0x450UL)
+    if((DBGMCU->IDCODE & 0xFFFF0000U) >= 0x20000000U)
+ 8100b00:	4b72      	ldr	r3, [pc, #456]	@ (8100ccc <HAL_DMA_Init+0x428>)
+ 8100b02:	681b      	ldr	r3, [r3, #0]
+ 8100b04:	0c1b      	lsrs	r3, r3, #16
+ 8100b06:	041b      	lsls	r3, r3, #16
+ 8100b08:	f1b3 5f00 	cmp.w	r3, #536870912	@ 0x20000000
+ 8100b0c:	d328      	bcc.n	8100b60 <HAL_DMA_Init+0x2bc>
+    {
+#endif /* STM32H7_DEV_ID == 0x450UL */
+      if(IS_DMA_UART_USART_REQUEST(hdma->Init.Request) != 0U)
+ 8100b0e:	687b      	ldr	r3, [r7, #4]
+ 8100b10:	685b      	ldr	r3, [r3, #4]
+ 8100b12:	2b28      	cmp	r3, #40	@ 0x28
+ 8100b14:	d903      	bls.n	8100b1e <HAL_DMA_Init+0x27a>
+ 8100b16:	687b      	ldr	r3, [r7, #4]
+ 8100b18:	685b      	ldr	r3, [r3, #4]
+ 8100b1a:	2b2e      	cmp	r3, #46	@ 0x2e
+ 8100b1c:	d917      	bls.n	8100b4e <HAL_DMA_Init+0x2aa>
+ 8100b1e:	687b      	ldr	r3, [r7, #4]
+ 8100b20:	685b      	ldr	r3, [r3, #4]
+ 8100b22:	2b3e      	cmp	r3, #62	@ 0x3e
+ 8100b24:	d903      	bls.n	8100b2e <HAL_DMA_Init+0x28a>
+ 8100b26:	687b      	ldr	r3, [r7, #4]
+ 8100b28:	685b      	ldr	r3, [r3, #4]
+ 8100b2a:	2b42      	cmp	r3, #66	@ 0x42
+ 8100b2c:	d90f      	bls.n	8100b4e <HAL_DMA_Init+0x2aa>
+ 8100b2e:	687b      	ldr	r3, [r7, #4]
+ 8100b30:	685b      	ldr	r3, [r3, #4]
+ 8100b32:	2b46      	cmp	r3, #70	@ 0x46
+ 8100b34:	d903      	bls.n	8100b3e <HAL_DMA_Init+0x29a>
+ 8100b36:	687b      	ldr	r3, [r7, #4]
+ 8100b38:	685b      	ldr	r3, [r3, #4]
+ 8100b3a:	2b48      	cmp	r3, #72	@ 0x48
+ 8100b3c:	d907      	bls.n	8100b4e <HAL_DMA_Init+0x2aa>
+ 8100b3e:	687b      	ldr	r3, [r7, #4]
+ 8100b40:	685b      	ldr	r3, [r3, #4]
+ 8100b42:	2b4e      	cmp	r3, #78	@ 0x4e
+ 8100b44:	d905      	bls.n	8100b52 <HAL_DMA_Init+0x2ae>
+ 8100b46:	687b      	ldr	r3, [r7, #4]
+ 8100b48:	685b      	ldr	r3, [r3, #4]
+ 8100b4a:	2b52      	cmp	r3, #82	@ 0x52
+ 8100b4c:	d801      	bhi.n	8100b52 <HAL_DMA_Init+0x2ae>
+ 8100b4e:	2301      	movs	r3, #1
+ 8100b50:	e000      	b.n	8100b54 <HAL_DMA_Init+0x2b0>
+ 8100b52:	2300      	movs	r3, #0
+ 8100b54:	2b00      	cmp	r3, #0
+ 8100b56:	d003      	beq.n	8100b60 <HAL_DMA_Init+0x2bc>
+      {
+        registerValue |= DMA_SxCR_TRBUFF;
+ 8100b58:	697b      	ldr	r3, [r7, #20]
+ 8100b5a:	f443 1380 	orr.w	r3, r3, #1048576	@ 0x100000
+ 8100b5e:	617b      	str	r3, [r7, #20]
+#if (STM32H7_DEV_ID == 0x450UL)
+    }
+#endif /* STM32H7_DEV_ID == 0x450UL */
+
+    /* Write to DMA Stream CR register */
+    ((DMA_Stream_TypeDef   *)hdma->Instance)->CR = registerValue;
+ 8100b60:	687b      	ldr	r3, [r7, #4]
+ 8100b62:	681b      	ldr	r3, [r3, #0]
+ 8100b64:	697a      	ldr	r2, [r7, #20]
+ 8100b66:	601a      	str	r2, [r3, #0]
+
+    /* Get the FCR register value */
+    registerValue = ((DMA_Stream_TypeDef   *)hdma->Instance)->FCR;
+ 8100b68:	687b      	ldr	r3, [r7, #4]
+ 8100b6a:	681b      	ldr	r3, [r3, #0]
+ 8100b6c:	695b      	ldr	r3, [r3, #20]
+ 8100b6e:	617b      	str	r3, [r7, #20]
+
+    /* Clear Direct mode and FIFO threshold bits */
+    registerValue &= (uint32_t)~(DMA_SxFCR_DMDIS | DMA_SxFCR_FTH);
+ 8100b70:	697b      	ldr	r3, [r7, #20]
+ 8100b72:	f023 0307 	bic.w	r3, r3, #7
+ 8100b76:	617b      	str	r3, [r7, #20]
+
+    /* Prepare the DMA Stream FIFO configuration */
+    registerValue |= hdma->Init.FIFOMode;
+ 8100b78:	687b      	ldr	r3, [r7, #4]
+ 8100b7a:	6a5b      	ldr	r3, [r3, #36]	@ 0x24
+ 8100b7c:	697a      	ldr	r2, [r7, #20]
+ 8100b7e:	4313      	orrs	r3, r2
+ 8100b80:	617b      	str	r3, [r7, #20]
+
+    /* the FIFO threshold is not used when the FIFO mode is disabled */
+    if(hdma->Init.FIFOMode == DMA_FIFOMODE_ENABLE)
+ 8100b82:	687b      	ldr	r3, [r7, #4]
+ 8100b84:	6a5b      	ldr	r3, [r3, #36]	@ 0x24
+ 8100b86:	2b04      	cmp	r3, #4
+ 8100b88:	d117      	bne.n	8100bba <HAL_DMA_Init+0x316>
+    {
+      /* Get the FIFO threshold */
+      registerValue |= hdma->Init.FIFOThreshold;
+ 8100b8a:	687b      	ldr	r3, [r7, #4]
+ 8100b8c:	6a9b      	ldr	r3, [r3, #40]	@ 0x28
+ 8100b8e:	697a      	ldr	r2, [r7, #20]
+ 8100b90:	4313      	orrs	r3, r2
+ 8100b92:	617b      	str	r3, [r7, #20]
+
+      /* Check compatibility between FIFO threshold level and size of the memory burst */
+      /* for INCR4, INCR8, INCR16 */
+      if(hdma->Init.MemBurst != DMA_MBURST_SINGLE)
+ 8100b94:	687b      	ldr	r3, [r7, #4]
+ 8100b96:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
+ 8100b98:	2b00      	cmp	r3, #0
+ 8100b9a:	d00e      	beq.n	8100bba <HAL_DMA_Init+0x316>
+      {
+        if (DMA_CheckFifoParam(hdma) != HAL_OK)
+ 8100b9c:	6878      	ldr	r0, [r7, #4]
+ 8100b9e:	f000 fa8d 	bl	81010bc <DMA_CheckFifoParam>
+ 8100ba2:	4603      	mov	r3, r0
+ 8100ba4:	2b00      	cmp	r3, #0
+ 8100ba6:	d008      	beq.n	8100bba <HAL_DMA_Init+0x316>
+        {
+          /* Update error code */
+          hdma->ErrorCode = HAL_DMA_ERROR_PARAM;
+ 8100ba8:	687b      	ldr	r3, [r7, #4]
+ 8100baa:	2240      	movs	r2, #64	@ 0x40
+ 8100bac:	655a      	str	r2, [r3, #84]	@ 0x54
+
+          /* Change the DMA state */
+          hdma->State = HAL_DMA_STATE_READY;
+ 8100bae:	687b      	ldr	r3, [r7, #4]
+ 8100bb0:	2201      	movs	r2, #1
+ 8100bb2:	f883 2035 	strb.w	r2, [r3, #53]	@ 0x35
+
+          return HAL_ERROR;
+ 8100bb6:	2301      	movs	r3, #1
+ 8100bb8:	e195      	b.n	8100ee6 <HAL_DMA_Init+0x642>
+        }
+      }
+    }
+
+    /* Write to DMA Stream FCR */
+    ((DMA_Stream_TypeDef   *)hdma->Instance)->FCR = registerValue;
+ 8100bba:	687b      	ldr	r3, [r7, #4]
+ 8100bbc:	681b      	ldr	r3, [r3, #0]
+ 8100bbe:	697a      	ldr	r2, [r7, #20]
+ 8100bc0:	615a      	str	r2, [r3, #20]
+
+    /* Initialize StreamBaseAddress and StreamIndex parameters to be used to calculate
+       DMA steam Base Address needed by HAL_DMA_IRQHandler() and HAL_DMA_PollForTransfer() */
+    regs_dma = (DMA_Base_Registers *)DMA_CalcBaseAndBitshift(hdma);
+ 8100bc2:	6878      	ldr	r0, [r7, #4]
+ 8100bc4:	f000 f9c8 	bl	8100f58 <DMA_CalcBaseAndBitshift>
+ 8100bc8:	4603      	mov	r3, r0
+ 8100bca:	60bb      	str	r3, [r7, #8]
+
+    /* Clear all interrupt flags */
+    regs_dma->IFCR = 0x3FUL << (hdma->StreamIndex & 0x1FU);
+ 8100bcc:	687b      	ldr	r3, [r7, #4]
+ 8100bce:	6ddb      	ldr	r3, [r3, #92]	@ 0x5c
+ 8100bd0:	f003 031f 	and.w	r3, r3, #31
+ 8100bd4:	223f      	movs	r2, #63	@ 0x3f
+ 8100bd6:	409a      	lsls	r2, r3
+ 8100bd8:	68bb      	ldr	r3, [r7, #8]
+ 8100bda:	609a      	str	r2, [r3, #8]
+ 8100bdc:	e0cb      	b.n	8100d76 <HAL_DMA_Init+0x4d2>
+  }
+  else if(IS_BDMA_CHANNEL_INSTANCE(hdma->Instance) != 0U) /* BDMA instance(s) */
+ 8100bde:	687b      	ldr	r3, [r7, #4]
+ 8100be0:	681b      	ldr	r3, [r3, #0]
+ 8100be2:	4a3b      	ldr	r2, [pc, #236]	@ (8100cd0 <HAL_DMA_Init+0x42c>)
+ 8100be4:	4293      	cmp	r3, r2
+ 8100be6:	d022      	beq.n	8100c2e <HAL_DMA_Init+0x38a>
+ 8100be8:	687b      	ldr	r3, [r7, #4]
+ 8100bea:	681b      	ldr	r3, [r3, #0]
+ 8100bec:	4a39      	ldr	r2, [pc, #228]	@ (8100cd4 <HAL_DMA_Init+0x430>)
+ 8100bee:	4293      	cmp	r3, r2
+ 8100bf0:	d01d      	beq.n	8100c2e <HAL_DMA_Init+0x38a>
+ 8100bf2:	687b      	ldr	r3, [r7, #4]
+ 8100bf4:	681b      	ldr	r3, [r3, #0]
+ 8100bf6:	4a38      	ldr	r2, [pc, #224]	@ (8100cd8 <HAL_DMA_Init+0x434>)
+ 8100bf8:	4293      	cmp	r3, r2
+ 8100bfa:	d018      	beq.n	8100c2e <HAL_DMA_Init+0x38a>
+ 8100bfc:	687b      	ldr	r3, [r7, #4]
+ 8100bfe:	681b      	ldr	r3, [r3, #0]
+ 8100c00:	4a36      	ldr	r2, [pc, #216]	@ (8100cdc <HAL_DMA_Init+0x438>)
+ 8100c02:	4293      	cmp	r3, r2
+ 8100c04:	d013      	beq.n	8100c2e <HAL_DMA_Init+0x38a>
+ 8100c06:	687b      	ldr	r3, [r7, #4]
+ 8100c08:	681b      	ldr	r3, [r3, #0]
+ 8100c0a:	4a35      	ldr	r2, [pc, #212]	@ (8100ce0 <HAL_DMA_Init+0x43c>)
+ 8100c0c:	4293      	cmp	r3, r2
+ 8100c0e:	d00e      	beq.n	8100c2e <HAL_DMA_Init+0x38a>
+ 8100c10:	687b      	ldr	r3, [r7, #4]
+ 8100c12:	681b      	ldr	r3, [r3, #0]
+ 8100c14:	4a33      	ldr	r2, [pc, #204]	@ (8100ce4 <HAL_DMA_Init+0x440>)
+ 8100c16:	4293      	cmp	r3, r2
+ 8100c18:	d009      	beq.n	8100c2e <HAL_DMA_Init+0x38a>
+ 8100c1a:	687b      	ldr	r3, [r7, #4]
+ 8100c1c:	681b      	ldr	r3, [r3, #0]
+ 8100c1e:	4a32      	ldr	r2, [pc, #200]	@ (8100ce8 <HAL_DMA_Init+0x444>)
+ 8100c20:	4293      	cmp	r3, r2
+ 8100c22:	d004      	beq.n	8100c2e <HAL_DMA_Init+0x38a>
+ 8100c24:	687b      	ldr	r3, [r7, #4]
+ 8100c26:	681b      	ldr	r3, [r3, #0]
+ 8100c28:	4a30      	ldr	r2, [pc, #192]	@ (8100cec <HAL_DMA_Init+0x448>)
+ 8100c2a:	4293      	cmp	r3, r2
+ 8100c2c:	d101      	bne.n	8100c32 <HAL_DMA_Init+0x38e>
+ 8100c2e:	2301      	movs	r3, #1
+ 8100c30:	e000      	b.n	8100c34 <HAL_DMA_Init+0x390>
+ 8100c32:	2300      	movs	r3, #0
+ 8100c34:	2b00      	cmp	r3, #0
+ 8100c36:	f000 8095 	beq.w	8100d64 <HAL_DMA_Init+0x4c0>
+  {
+    if(IS_BDMA_CHANNEL_DMAMUX_INSTANCE(hdma->Instance) != 0U)
+ 8100c3a:	687b      	ldr	r3, [r7, #4]
+ 8100c3c:	681b      	ldr	r3, [r3, #0]
+ 8100c3e:	4a24      	ldr	r2, [pc, #144]	@ (8100cd0 <HAL_DMA_Init+0x42c>)
+ 8100c40:	4293      	cmp	r3, r2
+ 8100c42:	d021      	beq.n	8100c88 <HAL_DMA_Init+0x3e4>
+ 8100c44:	687b      	ldr	r3, [r7, #4]
+ 8100c46:	681b      	ldr	r3, [r3, #0]
+ 8100c48:	4a22      	ldr	r2, [pc, #136]	@ (8100cd4 <HAL_DMA_Init+0x430>)
+ 8100c4a:	4293      	cmp	r3, r2
+ 8100c4c:	d01c      	beq.n	8100c88 <HAL_DMA_Init+0x3e4>
+ 8100c4e:	687b      	ldr	r3, [r7, #4]
+ 8100c50:	681b      	ldr	r3, [r3, #0]
+ 8100c52:	4a21      	ldr	r2, [pc, #132]	@ (8100cd8 <HAL_DMA_Init+0x434>)
+ 8100c54:	4293      	cmp	r3, r2
+ 8100c56:	d017      	beq.n	8100c88 <HAL_DMA_Init+0x3e4>
+ 8100c58:	687b      	ldr	r3, [r7, #4]
+ 8100c5a:	681b      	ldr	r3, [r3, #0]
+ 8100c5c:	4a1f      	ldr	r2, [pc, #124]	@ (8100cdc <HAL_DMA_Init+0x438>)
+ 8100c5e:	4293      	cmp	r3, r2
+ 8100c60:	d012      	beq.n	8100c88 <HAL_DMA_Init+0x3e4>
+ 8100c62:	687b      	ldr	r3, [r7, #4]
+ 8100c64:	681b      	ldr	r3, [r3, #0]
+ 8100c66:	4a1e      	ldr	r2, [pc, #120]	@ (8100ce0 <HAL_DMA_Init+0x43c>)
+ 8100c68:	4293      	cmp	r3, r2
+ 8100c6a:	d00d      	beq.n	8100c88 <HAL_DMA_Init+0x3e4>
+ 8100c6c:	687b      	ldr	r3, [r7, #4]
+ 8100c6e:	681b      	ldr	r3, [r3, #0]
+ 8100c70:	4a1c      	ldr	r2, [pc, #112]	@ (8100ce4 <HAL_DMA_Init+0x440>)
+ 8100c72:	4293      	cmp	r3, r2
+ 8100c74:	d008      	beq.n	8100c88 <HAL_DMA_Init+0x3e4>
+ 8100c76:	687b      	ldr	r3, [r7, #4]
+ 8100c78:	681b      	ldr	r3, [r3, #0]
+ 8100c7a:	4a1b      	ldr	r2, [pc, #108]	@ (8100ce8 <HAL_DMA_Init+0x444>)
+ 8100c7c:	4293      	cmp	r3, r2
+ 8100c7e:	d003      	beq.n	8100c88 <HAL_DMA_Init+0x3e4>
+ 8100c80:	687b      	ldr	r3, [r7, #4]
+ 8100c82:	681b      	ldr	r3, [r3, #0]
+ 8100c84:	4a19      	ldr	r2, [pc, #100]	@ (8100cec <HAL_DMA_Init+0x448>)
+ 8100c86:	4293      	cmp	r3, r2
+      /* Check the request parameter */
+      assert_param(IS_BDMA_REQUEST(hdma->Init.Request));
+    }
+
+    /* Change DMA peripheral state */
+    hdma->State = HAL_DMA_STATE_BUSY;
+ 8100c88:	687b      	ldr	r3, [r7, #4]
+ 8100c8a:	2202      	movs	r2, #2
+ 8100c8c:	f883 2035 	strb.w	r2, [r3, #53]	@ 0x35
+
+    /* Allocate lock resource */
+    __HAL_UNLOCK(hdma);
+ 8100c90:	687b      	ldr	r3, [r7, #4]
+ 8100c92:	2200      	movs	r2, #0
+ 8100c94:	f883 2034 	strb.w	r2, [r3, #52]	@ 0x34
+
+    /* Get the CR register value */
+    registerValue = ((BDMA_Channel_TypeDef *)hdma->Instance)->CCR;
+ 8100c98:	687b      	ldr	r3, [r7, #4]
+ 8100c9a:	681b      	ldr	r3, [r3, #0]
+ 8100c9c:	681b      	ldr	r3, [r3, #0]
+ 8100c9e:	617b      	str	r3, [r7, #20]
+
+    /* Clear PL, MSIZE, PSIZE, MINC, PINC, CIRC, DIR, MEM2MEM, DBM and CT bits */
+    registerValue &= ((uint32_t)~(BDMA_CCR_PL    | BDMA_CCR_MSIZE   | BDMA_CCR_PSIZE  | \
+ 8100ca0:	697b      	ldr	r3, [r7, #20]
+ 8100ca2:	f423 33ff 	bic.w	r3, r3, #130560	@ 0x1fe00
+ 8100ca6:	f423 73f8 	bic.w	r3, r3, #496	@ 0x1f0
+ 8100caa:	617b      	str	r3, [r7, #20]
+                                  BDMA_CCR_MINC  | BDMA_CCR_PINC    | BDMA_CCR_CIRC   | \
+                                  BDMA_CCR_DIR   | BDMA_CCR_MEM2MEM | BDMA_CCR_DBM    | \
+                                  BDMA_CCR_CT));
+
+    /* Prepare the DMA Channel configuration */
+    registerValue |=  DMA_TO_BDMA_DIRECTION(hdma->Init.Direction)            |
+ 8100cac:	687b      	ldr	r3, [r7, #4]
+ 8100cae:	689b      	ldr	r3, [r3, #8]
+ 8100cb0:	2b40      	cmp	r3, #64	@ 0x40
+ 8100cb2:	d01d      	beq.n	8100cf0 <HAL_DMA_Init+0x44c>
+ 8100cb4:	687b      	ldr	r3, [r7, #4]
+ 8100cb6:	689b      	ldr	r3, [r3, #8]
+ 8100cb8:	2b80      	cmp	r3, #128	@ 0x80
+ 8100cba:	d102      	bne.n	8100cc2 <HAL_DMA_Init+0x41e>
+ 8100cbc:	f44f 4380 	mov.w	r3, #16384	@ 0x4000
+ 8100cc0:	e017      	b.n	8100cf2 <HAL_DMA_Init+0x44e>
+ 8100cc2:	2300      	movs	r3, #0
+ 8100cc4:	e015      	b.n	8100cf2 <HAL_DMA_Init+0x44e>
+ 8100cc6:	bf00      	nop
+ 8100cc8:	fe10803f 	.word	0xfe10803f
+ 8100ccc:	5c001000 	.word	0x5c001000
+ 8100cd0:	58025408 	.word	0x58025408
+ 8100cd4:	5802541c 	.word	0x5802541c
+ 8100cd8:	58025430 	.word	0x58025430
+ 8100cdc:	58025444 	.word	0x58025444
+ 8100ce0:	58025458 	.word	0x58025458
+ 8100ce4:	5802546c 	.word	0x5802546c
+ 8100ce8:	58025480 	.word	0x58025480
+ 8100cec:	58025494 	.word	0x58025494
+ 8100cf0:	2310      	movs	r3, #16
+                      DMA_TO_BDMA_PERIPHERAL_INC(hdma->Init.PeriphInc)       |
+ 8100cf2:	687a      	ldr	r2, [r7, #4]
+ 8100cf4:	68d2      	ldr	r2, [r2, #12]
+ 8100cf6:	08d2      	lsrs	r2, r2, #3
+    registerValue |=  DMA_TO_BDMA_DIRECTION(hdma->Init.Direction)            |
+ 8100cf8:	431a      	orrs	r2, r3
+                      DMA_TO_BDMA_MEMORY_INC(hdma->Init.MemInc)              |
+ 8100cfa:	687b      	ldr	r3, [r7, #4]
+ 8100cfc:	691b      	ldr	r3, [r3, #16]
+ 8100cfe:	08db      	lsrs	r3, r3, #3
+                      DMA_TO_BDMA_PERIPHERAL_INC(hdma->Init.PeriphInc)       |
+ 8100d00:	431a      	orrs	r2, r3
+                      DMA_TO_BDMA_PDATA_SIZE(hdma->Init.PeriphDataAlignment) |
+ 8100d02:	687b      	ldr	r3, [r7, #4]
+ 8100d04:	695b      	ldr	r3, [r3, #20]
+ 8100d06:	08db      	lsrs	r3, r3, #3
+                      DMA_TO_BDMA_MEMORY_INC(hdma->Init.MemInc)              |
+ 8100d08:	431a      	orrs	r2, r3
+                      DMA_TO_BDMA_MDATA_SIZE(hdma->Init.MemDataAlignment)    |
+ 8100d0a:	687b      	ldr	r3, [r7, #4]
+ 8100d0c:	699b      	ldr	r3, [r3, #24]
+ 8100d0e:	08db      	lsrs	r3, r3, #3
+                      DMA_TO_BDMA_PDATA_SIZE(hdma->Init.PeriphDataAlignment) |
+ 8100d10:	431a      	orrs	r2, r3
+                      DMA_TO_BDMA_MODE(hdma->Init.Mode)                      |
+ 8100d12:	687b      	ldr	r3, [r7, #4]
+ 8100d14:	69db      	ldr	r3, [r3, #28]
+ 8100d16:	08db      	lsrs	r3, r3, #3
+                      DMA_TO_BDMA_MDATA_SIZE(hdma->Init.MemDataAlignment)    |
+ 8100d18:	431a      	orrs	r2, r3
+                      DMA_TO_BDMA_PRIORITY(hdma->Init.Priority);
+ 8100d1a:	687b      	ldr	r3, [r7, #4]
+ 8100d1c:	6a1b      	ldr	r3, [r3, #32]
+ 8100d1e:	091b      	lsrs	r3, r3, #4
+                      DMA_TO_BDMA_MODE(hdma->Init.Mode)                      |
+ 8100d20:	4313      	orrs	r3, r2
+    registerValue |=  DMA_TO_BDMA_DIRECTION(hdma->Init.Direction)            |
+ 8100d22:	697a      	ldr	r2, [r7, #20]
+ 8100d24:	4313      	orrs	r3, r2
+ 8100d26:	617b      	str	r3, [r7, #20]
+
+    /* Write to DMA Channel CR register */
+    ((BDMA_Channel_TypeDef *)hdma->Instance)->CCR = registerValue;
+ 8100d28:	687b      	ldr	r3, [r7, #4]
+ 8100d2a:	681b      	ldr	r3, [r3, #0]
+ 8100d2c:	697a      	ldr	r2, [r7, #20]
+ 8100d2e:	601a      	str	r2, [r3, #0]
+
+    /* calculation of the channel index */
+    hdma->StreamIndex = (((uint32_t)((uint32_t*)hdma->Instance) - (uint32_t)BDMA_Channel0) / ((uint32_t)BDMA_Channel1 - (uint32_t)BDMA_Channel0)) << 2U;
+ 8100d30:	687b      	ldr	r3, [r7, #4]
+ 8100d32:	681b      	ldr	r3, [r3, #0]
+ 8100d34:	461a      	mov	r2, r3
+ 8100d36:	4b6e      	ldr	r3, [pc, #440]	@ (8100ef0 <HAL_DMA_Init+0x64c>)
+ 8100d38:	4413      	add	r3, r2
+ 8100d3a:	4a6e      	ldr	r2, [pc, #440]	@ (8100ef4 <HAL_DMA_Init+0x650>)
+ 8100d3c:	fba2 2303 	umull	r2, r3, r2, r3
+ 8100d40:	091b      	lsrs	r3, r3, #4
+ 8100d42:	009a      	lsls	r2, r3, #2
+ 8100d44:	687b      	ldr	r3, [r7, #4]
+ 8100d46:	65da      	str	r2, [r3, #92]	@ 0x5c
+
+    /* Initialize StreamBaseAddress and StreamIndex parameters to be used to calculate
+    DMA steam Base Address needed by HAL_DMA_IRQHandler() and HAL_DMA_PollForTransfer() */
+    regs_bdma = (BDMA_Base_Registers *)DMA_CalcBaseAndBitshift(hdma);
+ 8100d48:	6878      	ldr	r0, [r7, #4]
+ 8100d4a:	f000 f905 	bl	8100f58 <DMA_CalcBaseAndBitshift>
+ 8100d4e:	4603      	mov	r3, r0
+ 8100d50:	60fb      	str	r3, [r7, #12]
+
+    /* Clear all interrupt flags */
+    regs_bdma->IFCR = ((BDMA_IFCR_CGIF0) << (hdma->StreamIndex & 0x1FU));
+ 8100d52:	687b      	ldr	r3, [r7, #4]
+ 8100d54:	6ddb      	ldr	r3, [r3, #92]	@ 0x5c
+ 8100d56:	f003 031f 	and.w	r3, r3, #31
+ 8100d5a:	2201      	movs	r2, #1
+ 8100d5c:	409a      	lsls	r2, r3
+ 8100d5e:	68fb      	ldr	r3, [r7, #12]
+ 8100d60:	605a      	str	r2, [r3, #4]
+ 8100d62:	e008      	b.n	8100d76 <HAL_DMA_Init+0x4d2>
+  }
+  else
+  {
+    hdma->ErrorCode = HAL_DMA_ERROR_PARAM;
+ 8100d64:	687b      	ldr	r3, [r7, #4]
+ 8100d66:	2240      	movs	r2, #64	@ 0x40
+ 8100d68:	655a      	str	r2, [r3, #84]	@ 0x54
+    hdma->State     = HAL_DMA_STATE_ERROR;
+ 8100d6a:	687b      	ldr	r3, [r7, #4]
+ 8100d6c:	2203      	movs	r2, #3
+ 8100d6e:	f883 2035 	strb.w	r2, [r3, #53]	@ 0x35
+
+    return HAL_ERROR;
+ 8100d72:	2301      	movs	r3, #1
+ 8100d74:	e0b7      	b.n	8100ee6 <HAL_DMA_Init+0x642>
+  }
+
+  if(IS_DMA_DMAMUX_ALL_INSTANCE(hdma->Instance) != 0U) /* No DMAMUX available for BDMA1 */
+ 8100d76:	687b      	ldr	r3, [r7, #4]
+ 8100d78:	681b      	ldr	r3, [r3, #0]
+ 8100d7a:	4a5f      	ldr	r2, [pc, #380]	@ (8100ef8 <HAL_DMA_Init+0x654>)
+ 8100d7c:	4293      	cmp	r3, r2
+ 8100d7e:	d072      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100d80:	687b      	ldr	r3, [r7, #4]
+ 8100d82:	681b      	ldr	r3, [r3, #0]
+ 8100d84:	4a5d      	ldr	r2, [pc, #372]	@ (8100efc <HAL_DMA_Init+0x658>)
+ 8100d86:	4293      	cmp	r3, r2
+ 8100d88:	d06d      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100d8a:	687b      	ldr	r3, [r7, #4]
+ 8100d8c:	681b      	ldr	r3, [r3, #0]
+ 8100d8e:	4a5c      	ldr	r2, [pc, #368]	@ (8100f00 <HAL_DMA_Init+0x65c>)
+ 8100d90:	4293      	cmp	r3, r2
+ 8100d92:	d068      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100d94:	687b      	ldr	r3, [r7, #4]
+ 8100d96:	681b      	ldr	r3, [r3, #0]
+ 8100d98:	4a5a      	ldr	r2, [pc, #360]	@ (8100f04 <HAL_DMA_Init+0x660>)
+ 8100d9a:	4293      	cmp	r3, r2
+ 8100d9c:	d063      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100d9e:	687b      	ldr	r3, [r7, #4]
+ 8100da0:	681b      	ldr	r3, [r3, #0]
+ 8100da2:	4a59      	ldr	r2, [pc, #356]	@ (8100f08 <HAL_DMA_Init+0x664>)
+ 8100da4:	4293      	cmp	r3, r2
+ 8100da6:	d05e      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100da8:	687b      	ldr	r3, [r7, #4]
+ 8100daa:	681b      	ldr	r3, [r3, #0]
+ 8100dac:	4a57      	ldr	r2, [pc, #348]	@ (8100f0c <HAL_DMA_Init+0x668>)
+ 8100dae:	4293      	cmp	r3, r2
+ 8100db0:	d059      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100db2:	687b      	ldr	r3, [r7, #4]
+ 8100db4:	681b      	ldr	r3, [r3, #0]
+ 8100db6:	4a56      	ldr	r2, [pc, #344]	@ (8100f10 <HAL_DMA_Init+0x66c>)
+ 8100db8:	4293      	cmp	r3, r2
+ 8100dba:	d054      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100dbc:	687b      	ldr	r3, [r7, #4]
+ 8100dbe:	681b      	ldr	r3, [r3, #0]
+ 8100dc0:	4a54      	ldr	r2, [pc, #336]	@ (8100f14 <HAL_DMA_Init+0x670>)
+ 8100dc2:	4293      	cmp	r3, r2
+ 8100dc4:	d04f      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100dc6:	687b      	ldr	r3, [r7, #4]
+ 8100dc8:	681b      	ldr	r3, [r3, #0]
+ 8100dca:	4a53      	ldr	r2, [pc, #332]	@ (8100f18 <HAL_DMA_Init+0x674>)
+ 8100dcc:	4293      	cmp	r3, r2
+ 8100dce:	d04a      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100dd0:	687b      	ldr	r3, [r7, #4]
+ 8100dd2:	681b      	ldr	r3, [r3, #0]
+ 8100dd4:	4a51      	ldr	r2, [pc, #324]	@ (8100f1c <HAL_DMA_Init+0x678>)
+ 8100dd6:	4293      	cmp	r3, r2
+ 8100dd8:	d045      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100dda:	687b      	ldr	r3, [r7, #4]
+ 8100ddc:	681b      	ldr	r3, [r3, #0]
+ 8100dde:	4a50      	ldr	r2, [pc, #320]	@ (8100f20 <HAL_DMA_Init+0x67c>)
+ 8100de0:	4293      	cmp	r3, r2
+ 8100de2:	d040      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100de4:	687b      	ldr	r3, [r7, #4]
+ 8100de6:	681b      	ldr	r3, [r3, #0]
+ 8100de8:	4a4e      	ldr	r2, [pc, #312]	@ (8100f24 <HAL_DMA_Init+0x680>)
+ 8100dea:	4293      	cmp	r3, r2
+ 8100dec:	d03b      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100dee:	687b      	ldr	r3, [r7, #4]
+ 8100df0:	681b      	ldr	r3, [r3, #0]
+ 8100df2:	4a4d      	ldr	r2, [pc, #308]	@ (8100f28 <HAL_DMA_Init+0x684>)
+ 8100df4:	4293      	cmp	r3, r2
+ 8100df6:	d036      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100df8:	687b      	ldr	r3, [r7, #4]
+ 8100dfa:	681b      	ldr	r3, [r3, #0]
+ 8100dfc:	4a4b      	ldr	r2, [pc, #300]	@ (8100f2c <HAL_DMA_Init+0x688>)
+ 8100dfe:	4293      	cmp	r3, r2
+ 8100e00:	d031      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100e02:	687b      	ldr	r3, [r7, #4]
+ 8100e04:	681b      	ldr	r3, [r3, #0]
+ 8100e06:	4a4a      	ldr	r2, [pc, #296]	@ (8100f30 <HAL_DMA_Init+0x68c>)
+ 8100e08:	4293      	cmp	r3, r2
+ 8100e0a:	d02c      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100e0c:	687b      	ldr	r3, [r7, #4]
+ 8100e0e:	681b      	ldr	r3, [r3, #0]
+ 8100e10:	4a48      	ldr	r2, [pc, #288]	@ (8100f34 <HAL_DMA_Init+0x690>)
+ 8100e12:	4293      	cmp	r3, r2
+ 8100e14:	d027      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100e16:	687b      	ldr	r3, [r7, #4]
+ 8100e18:	681b      	ldr	r3, [r3, #0]
+ 8100e1a:	4a47      	ldr	r2, [pc, #284]	@ (8100f38 <HAL_DMA_Init+0x694>)
+ 8100e1c:	4293      	cmp	r3, r2
+ 8100e1e:	d022      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100e20:	687b      	ldr	r3, [r7, #4]
+ 8100e22:	681b      	ldr	r3, [r3, #0]
+ 8100e24:	4a45      	ldr	r2, [pc, #276]	@ (8100f3c <HAL_DMA_Init+0x698>)
+ 8100e26:	4293      	cmp	r3, r2
+ 8100e28:	d01d      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100e2a:	687b      	ldr	r3, [r7, #4]
+ 8100e2c:	681b      	ldr	r3, [r3, #0]
+ 8100e2e:	4a44      	ldr	r2, [pc, #272]	@ (8100f40 <HAL_DMA_Init+0x69c>)
+ 8100e30:	4293      	cmp	r3, r2
+ 8100e32:	d018      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100e34:	687b      	ldr	r3, [r7, #4]
+ 8100e36:	681b      	ldr	r3, [r3, #0]
+ 8100e38:	4a42      	ldr	r2, [pc, #264]	@ (8100f44 <HAL_DMA_Init+0x6a0>)
+ 8100e3a:	4293      	cmp	r3, r2
+ 8100e3c:	d013      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100e3e:	687b      	ldr	r3, [r7, #4]
+ 8100e40:	681b      	ldr	r3, [r3, #0]
+ 8100e42:	4a41      	ldr	r2, [pc, #260]	@ (8100f48 <HAL_DMA_Init+0x6a4>)
+ 8100e44:	4293      	cmp	r3, r2
+ 8100e46:	d00e      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100e48:	687b      	ldr	r3, [r7, #4]
+ 8100e4a:	681b      	ldr	r3, [r3, #0]
+ 8100e4c:	4a3f      	ldr	r2, [pc, #252]	@ (8100f4c <HAL_DMA_Init+0x6a8>)
+ 8100e4e:	4293      	cmp	r3, r2
+ 8100e50:	d009      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100e52:	687b      	ldr	r3, [r7, #4]
+ 8100e54:	681b      	ldr	r3, [r3, #0]
+ 8100e56:	4a3e      	ldr	r2, [pc, #248]	@ (8100f50 <HAL_DMA_Init+0x6ac>)
+ 8100e58:	4293      	cmp	r3, r2
+ 8100e5a:	d004      	beq.n	8100e66 <HAL_DMA_Init+0x5c2>
+ 8100e5c:	687b      	ldr	r3, [r7, #4]
+ 8100e5e:	681b      	ldr	r3, [r3, #0]
+ 8100e60:	4a3c      	ldr	r2, [pc, #240]	@ (8100f54 <HAL_DMA_Init+0x6b0>)
+ 8100e62:	4293      	cmp	r3, r2
+ 8100e64:	d101      	bne.n	8100e6a <HAL_DMA_Init+0x5c6>
+ 8100e66:	2301      	movs	r3, #1
+ 8100e68:	e000      	b.n	8100e6c <HAL_DMA_Init+0x5c8>
+ 8100e6a:	2300      	movs	r3, #0
+ 8100e6c:	2b00      	cmp	r3, #0
+ 8100e6e:	d032      	beq.n	8100ed6 <HAL_DMA_Init+0x632>
+  {
+    /* Initialize parameters for DMAMUX channel :
+    DMAmuxChannel, DMAmuxChannelStatus and DMAmuxChannelStatusMask
+    */
+    DMA_CalcDMAMUXChannelBaseAndMask(hdma);
+ 8100e70:	6878      	ldr	r0, [r7, #4]
+ 8100e72:	f000 f99f 	bl	81011b4 <DMA_CalcDMAMUXChannelBaseAndMask>
+
+    if(hdma->Init.Direction == DMA_MEMORY_TO_MEMORY)
+ 8100e76:	687b      	ldr	r3, [r7, #4]
+ 8100e78:	689b      	ldr	r3, [r3, #8]
+ 8100e7a:	2b80      	cmp	r3, #128	@ 0x80
+ 8100e7c:	d102      	bne.n	8100e84 <HAL_DMA_Init+0x5e0>
+    {
+      /* if memory to memory force the request to 0*/
+      hdma->Init.Request = DMA_REQUEST_MEM2MEM;
+ 8100e7e:	687b      	ldr	r3, [r7, #4]
+ 8100e80:	2200      	movs	r2, #0
+ 8100e82:	605a      	str	r2, [r3, #4]
+    }
+
+    /* Set peripheral request  to DMAMUX channel */
+    hdma->DMAmuxChannel->CCR = (hdma->Init.Request & DMAMUX_CxCR_DMAREQ_ID);
+ 8100e84:	687b      	ldr	r3, [r7, #4]
+ 8100e86:	685a      	ldr	r2, [r3, #4]
+ 8100e88:	687b      	ldr	r3, [r7, #4]
+ 8100e8a:	6e1b      	ldr	r3, [r3, #96]	@ 0x60
+ 8100e8c:	b2d2      	uxtb	r2, r2
+ 8100e8e:	601a      	str	r2, [r3, #0]
+
+    /* Clear the DMAMUX synchro overrun flag */
+    hdma->DMAmuxChannelStatus->CFR = hdma->DMAmuxChannelStatusMask;
+ 8100e90:	687b      	ldr	r3, [r7, #4]
+ 8100e92:	6e5b      	ldr	r3, [r3, #100]	@ 0x64
+ 8100e94:	687a      	ldr	r2, [r7, #4]
+ 8100e96:	6e92      	ldr	r2, [r2, #104]	@ 0x68
+ 8100e98:	605a      	str	r2, [r3, #4]
+
+    /* Initialize parameters for DMAMUX request generator :
+    if the DMA request is DMA_REQUEST_GENERATOR0 to DMA_REQUEST_GENERATOR7
+    */
+    if((hdma->Init.Request >= DMA_REQUEST_GENERATOR0) && (hdma->Init.Request <= DMA_REQUEST_GENERATOR7))
+ 8100e9a:	687b      	ldr	r3, [r7, #4]
+ 8100e9c:	685b      	ldr	r3, [r3, #4]
+ 8100e9e:	2b00      	cmp	r3, #0
+ 8100ea0:	d010      	beq.n	8100ec4 <HAL_DMA_Init+0x620>
+ 8100ea2:	687b      	ldr	r3, [r7, #4]
+ 8100ea4:	685b      	ldr	r3, [r3, #4]
+ 8100ea6:	2b08      	cmp	r3, #8
+ 8100ea8:	d80c      	bhi.n	8100ec4 <HAL_DMA_Init+0x620>
+    {
+      /* Initialize parameters for DMAMUX request generator :
+      DMAmuxRequestGen, DMAmuxRequestGenStatus and DMAmuxRequestGenStatusMask */
+      DMA_CalcDMAMUXRequestGenBaseAndMask(hdma);
+ 8100eaa:	6878      	ldr	r0, [r7, #4]
+ 8100eac:	f000 fa1c 	bl	81012e8 <DMA_CalcDMAMUXRequestGenBaseAndMask>
+
+      /* Reset the DMAMUX request generator register */
+      hdma->DMAmuxRequestGen->RGCR = 0U;
+ 8100eb0:	687b      	ldr	r3, [r7, #4]
+ 8100eb2:	6edb      	ldr	r3, [r3, #108]	@ 0x6c
+ 8100eb4:	2200      	movs	r2, #0
+ 8100eb6:	601a      	str	r2, [r3, #0]
+
+      /* Clear the DMAMUX request generator overrun flag */
+      hdma->DMAmuxRequestGenStatus->RGCFR = hdma->DMAmuxRequestGenStatusMask;
+ 8100eb8:	687b      	ldr	r3, [r7, #4]
+ 8100eba:	6f1b      	ldr	r3, [r3, #112]	@ 0x70
+ 8100ebc:	687a      	ldr	r2, [r7, #4]
+ 8100ebe:	6f52      	ldr	r2, [r2, #116]	@ 0x74
+ 8100ec0:	605a      	str	r2, [r3, #4]
+ 8100ec2:	e008      	b.n	8100ed6 <HAL_DMA_Init+0x632>
+    }
+    else
+    {
+      hdma->DMAmuxRequestGen = 0U;
+ 8100ec4:	687b      	ldr	r3, [r7, #4]
+ 8100ec6:	2200      	movs	r2, #0
+ 8100ec8:	66da      	str	r2, [r3, #108]	@ 0x6c
+      hdma->DMAmuxRequestGenStatus = 0U;
+ 8100eca:	687b      	ldr	r3, [r7, #4]
+ 8100ecc:	2200      	movs	r2, #0
+ 8100ece:	671a      	str	r2, [r3, #112]	@ 0x70
+      hdma->DMAmuxRequestGenStatusMask = 0U;
+ 8100ed0:	687b      	ldr	r3, [r7, #4]
+ 8100ed2:	2200      	movs	r2, #0
+ 8100ed4:	675a      	str	r2, [r3, #116]	@ 0x74
+    }
+  }
+
+  /* Initialize the error code */
+  hdma->ErrorCode = HAL_DMA_ERROR_NONE;
+ 8100ed6:	687b      	ldr	r3, [r7, #4]
+ 8100ed8:	2200      	movs	r2, #0
+ 8100eda:	655a      	str	r2, [r3, #84]	@ 0x54
+
+  /* Initialize the DMA state */
+  hdma->State = HAL_DMA_STATE_READY;
+ 8100edc:	687b      	ldr	r3, [r7, #4]
+ 8100ede:	2201      	movs	r2, #1
+ 8100ee0:	f883 2035 	strb.w	r2, [r3, #53]	@ 0x35
+
+  return HAL_OK;
+ 8100ee4:	2300      	movs	r3, #0
+}
+ 8100ee6:	4618      	mov	r0, r3
+ 8100ee8:	3718      	adds	r7, #24
+ 8100eea:	46bd      	mov	sp, r7
+ 8100eec:	bd80      	pop	{r7, pc}
+ 8100eee:	bf00      	nop
+ 8100ef0:	a7fdabf8 	.word	0xa7fdabf8
+ 8100ef4:	cccccccd 	.word	0xcccccccd
+ 8100ef8:	40020010 	.word	0x40020010
+ 8100efc:	40020028 	.word	0x40020028
+ 8100f00:	40020040 	.word	0x40020040
+ 8100f04:	40020058 	.word	0x40020058
+ 8100f08:	40020070 	.word	0x40020070
+ 8100f0c:	40020088 	.word	0x40020088
+ 8100f10:	400200a0 	.word	0x400200a0
+ 8100f14:	400200b8 	.word	0x400200b8
+ 8100f18:	40020410 	.word	0x40020410
+ 8100f1c:	40020428 	.word	0x40020428
+ 8100f20:	40020440 	.word	0x40020440
+ 8100f24:	40020458 	.word	0x40020458
+ 8100f28:	40020470 	.word	0x40020470
+ 8100f2c:	40020488 	.word	0x40020488
+ 8100f30:	400204a0 	.word	0x400204a0
+ 8100f34:	400204b8 	.word	0x400204b8
+ 8100f38:	58025408 	.word	0x58025408
+ 8100f3c:	5802541c 	.word	0x5802541c
+ 8100f40:	58025430 	.word	0x58025430
+ 8100f44:	58025444 	.word	0x58025444
+ 8100f48:	58025458 	.word	0x58025458
+ 8100f4c:	5802546c 	.word	0x5802546c
+ 8100f50:	58025480 	.word	0x58025480
+ 8100f54:	58025494 	.word	0x58025494
+
+08100f58 <DMA_CalcBaseAndBitshift>:
+  * @param  hdma:       pointer to a DMA_HandleTypeDef structure that contains
+  *                     the configuration information for the specified DMA Stream.
+  * @retval Stream base address
+  */
+static uint32_t DMA_CalcBaseAndBitshift(DMA_HandleTypeDef *hdma)
+{
+ 8100f58:	b480      	push	{r7}
+ 8100f5a:	b085      	sub	sp, #20
+ 8100f5c:	af00      	add	r7, sp, #0
+ 8100f5e:	6078      	str	r0, [r7, #4]
+  if(IS_DMA_STREAM_INSTANCE(hdma->Instance) != 0U) /* DMA1 or DMA2 instance */
+ 8100f60:	687b      	ldr	r3, [r7, #4]
+ 8100f62:	681b      	ldr	r3, [r3, #0]
+ 8100f64:	4a43      	ldr	r2, [pc, #268]	@ (8101074 <DMA_CalcBaseAndBitshift+0x11c>)
+ 8100f66:	4293      	cmp	r3, r2
+ 8100f68:	d04a      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100f6a:	687b      	ldr	r3, [r7, #4]
+ 8100f6c:	681b      	ldr	r3, [r3, #0]
+ 8100f6e:	4a42      	ldr	r2, [pc, #264]	@ (8101078 <DMA_CalcBaseAndBitshift+0x120>)
+ 8100f70:	4293      	cmp	r3, r2
+ 8100f72:	d045      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100f74:	687b      	ldr	r3, [r7, #4]
+ 8100f76:	681b      	ldr	r3, [r3, #0]
+ 8100f78:	4a40      	ldr	r2, [pc, #256]	@ (810107c <DMA_CalcBaseAndBitshift+0x124>)
+ 8100f7a:	4293      	cmp	r3, r2
+ 8100f7c:	d040      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100f7e:	687b      	ldr	r3, [r7, #4]
+ 8100f80:	681b      	ldr	r3, [r3, #0]
+ 8100f82:	4a3f      	ldr	r2, [pc, #252]	@ (8101080 <DMA_CalcBaseAndBitshift+0x128>)
+ 8100f84:	4293      	cmp	r3, r2
+ 8100f86:	d03b      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100f88:	687b      	ldr	r3, [r7, #4]
+ 8100f8a:	681b      	ldr	r3, [r3, #0]
+ 8100f8c:	4a3d      	ldr	r2, [pc, #244]	@ (8101084 <DMA_CalcBaseAndBitshift+0x12c>)
+ 8100f8e:	4293      	cmp	r3, r2
+ 8100f90:	d036      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100f92:	687b      	ldr	r3, [r7, #4]
+ 8100f94:	681b      	ldr	r3, [r3, #0]
+ 8100f96:	4a3c      	ldr	r2, [pc, #240]	@ (8101088 <DMA_CalcBaseAndBitshift+0x130>)
+ 8100f98:	4293      	cmp	r3, r2
+ 8100f9a:	d031      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100f9c:	687b      	ldr	r3, [r7, #4]
+ 8100f9e:	681b      	ldr	r3, [r3, #0]
+ 8100fa0:	4a3a      	ldr	r2, [pc, #232]	@ (810108c <DMA_CalcBaseAndBitshift+0x134>)
+ 8100fa2:	4293      	cmp	r3, r2
+ 8100fa4:	d02c      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100fa6:	687b      	ldr	r3, [r7, #4]
+ 8100fa8:	681b      	ldr	r3, [r3, #0]
+ 8100faa:	4a39      	ldr	r2, [pc, #228]	@ (8101090 <DMA_CalcBaseAndBitshift+0x138>)
+ 8100fac:	4293      	cmp	r3, r2
+ 8100fae:	d027      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100fb0:	687b      	ldr	r3, [r7, #4]
+ 8100fb2:	681b      	ldr	r3, [r3, #0]
+ 8100fb4:	4a37      	ldr	r2, [pc, #220]	@ (8101094 <DMA_CalcBaseAndBitshift+0x13c>)
+ 8100fb6:	4293      	cmp	r3, r2
+ 8100fb8:	d022      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100fba:	687b      	ldr	r3, [r7, #4]
+ 8100fbc:	681b      	ldr	r3, [r3, #0]
+ 8100fbe:	4a36      	ldr	r2, [pc, #216]	@ (8101098 <DMA_CalcBaseAndBitshift+0x140>)
+ 8100fc0:	4293      	cmp	r3, r2
+ 8100fc2:	d01d      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100fc4:	687b      	ldr	r3, [r7, #4]
+ 8100fc6:	681b      	ldr	r3, [r3, #0]
+ 8100fc8:	4a34      	ldr	r2, [pc, #208]	@ (810109c <DMA_CalcBaseAndBitshift+0x144>)
+ 8100fca:	4293      	cmp	r3, r2
+ 8100fcc:	d018      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100fce:	687b      	ldr	r3, [r7, #4]
+ 8100fd0:	681b      	ldr	r3, [r3, #0]
+ 8100fd2:	4a33      	ldr	r2, [pc, #204]	@ (81010a0 <DMA_CalcBaseAndBitshift+0x148>)
+ 8100fd4:	4293      	cmp	r3, r2
+ 8100fd6:	d013      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100fd8:	687b      	ldr	r3, [r7, #4]
+ 8100fda:	681b      	ldr	r3, [r3, #0]
+ 8100fdc:	4a31      	ldr	r2, [pc, #196]	@ (81010a4 <DMA_CalcBaseAndBitshift+0x14c>)
+ 8100fde:	4293      	cmp	r3, r2
+ 8100fe0:	d00e      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100fe2:	687b      	ldr	r3, [r7, #4]
+ 8100fe4:	681b      	ldr	r3, [r3, #0]
+ 8100fe6:	4a30      	ldr	r2, [pc, #192]	@ (81010a8 <DMA_CalcBaseAndBitshift+0x150>)
+ 8100fe8:	4293      	cmp	r3, r2
+ 8100fea:	d009      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100fec:	687b      	ldr	r3, [r7, #4]
+ 8100fee:	681b      	ldr	r3, [r3, #0]
+ 8100ff0:	4a2e      	ldr	r2, [pc, #184]	@ (81010ac <DMA_CalcBaseAndBitshift+0x154>)
+ 8100ff2:	4293      	cmp	r3, r2
+ 8100ff4:	d004      	beq.n	8101000 <DMA_CalcBaseAndBitshift+0xa8>
+ 8100ff6:	687b      	ldr	r3, [r7, #4]
+ 8100ff8:	681b      	ldr	r3, [r3, #0]
+ 8100ffa:	4a2d      	ldr	r2, [pc, #180]	@ (81010b0 <DMA_CalcBaseAndBitshift+0x158>)
+ 8100ffc:	4293      	cmp	r3, r2
+ 8100ffe:	d101      	bne.n	8101004 <DMA_CalcBaseAndBitshift+0xac>
+ 8101000:	2301      	movs	r3, #1
+ 8101002:	e000      	b.n	8101006 <DMA_CalcBaseAndBitshift+0xae>
+ 8101004:	2300      	movs	r3, #0
+ 8101006:	2b00      	cmp	r3, #0
+ 8101008:	d026      	beq.n	8101058 <DMA_CalcBaseAndBitshift+0x100>
+  {
+    uint32_t stream_number = (((uint32_t)((uint32_t*)hdma->Instance) & 0xFFU) - 16U) / 24U;
+ 810100a:	687b      	ldr	r3, [r7, #4]
+ 810100c:	681b      	ldr	r3, [r3, #0]
+ 810100e:	b2db      	uxtb	r3, r3
+ 8101010:	3b10      	subs	r3, #16
+ 8101012:	4a28      	ldr	r2, [pc, #160]	@ (81010b4 <DMA_CalcBaseAndBitshift+0x15c>)
+ 8101014:	fba2 2303 	umull	r2, r3, r2, r3
+ 8101018:	091b      	lsrs	r3, r3, #4
+ 810101a:	60fb      	str	r3, [r7, #12]
+
+    /* lookup table for necessary bitshift of flags within status registers */
+    static const uint8_t flagBitshiftOffset[8U] = {0U, 6U, 16U, 22U, 0U, 6U, 16U, 22U};
+    hdma->StreamIndex = flagBitshiftOffset[stream_number & 0x7U];
+ 810101c:	68fb      	ldr	r3, [r7, #12]
+ 810101e:	f003 0307 	and.w	r3, r3, #7
+ 8101022:	4a25      	ldr	r2, [pc, #148]	@ (81010b8 <DMA_CalcBaseAndBitshift+0x160>)
+ 8101024:	5cd3      	ldrb	r3, [r2, r3]
+ 8101026:	461a      	mov	r2, r3
+ 8101028:	687b      	ldr	r3, [r7, #4]
+ 810102a:	65da      	str	r2, [r3, #92]	@ 0x5c
+
+    if (stream_number > 3U)
+ 810102c:	68fb      	ldr	r3, [r7, #12]
+ 810102e:	2b03      	cmp	r3, #3
+ 8101030:	d909      	bls.n	8101046 <DMA_CalcBaseAndBitshift+0xee>
+    {
+      /* return pointer to HISR and HIFCR */
+      hdma->StreamBaseAddress = (((uint32_t)((uint32_t*)hdma->Instance) & (uint32_t)(~0x3FFU)) + 4U);
+ 8101032:	687b      	ldr	r3, [r7, #4]
+ 8101034:	681b      	ldr	r3, [r3, #0]
+ 8101036:	f423 737f 	bic.w	r3, r3, #1020	@ 0x3fc
+ 810103a:	f023 0303 	bic.w	r3, r3, #3
+ 810103e:	1d1a      	adds	r2, r3, #4
+ 8101040:	687b      	ldr	r3, [r7, #4]
+ 8101042:	659a      	str	r2, [r3, #88]	@ 0x58
+ 8101044:	e00e      	b.n	8101064 <DMA_CalcBaseAndBitshift+0x10c>
+    }
+    else
+    {
+      /* return pointer to LISR and LIFCR */
+      hdma->StreamBaseAddress = ((uint32_t)((uint32_t*)hdma->Instance) & (uint32_t)(~0x3FFU));
+ 8101046:	687b      	ldr	r3, [r7, #4]
+ 8101048:	681b      	ldr	r3, [r3, #0]
+ 810104a:	f423 737f 	bic.w	r3, r3, #1020	@ 0x3fc
+ 810104e:	f023 0303 	bic.w	r3, r3, #3
+ 8101052:	687a      	ldr	r2, [r7, #4]
+ 8101054:	6593      	str	r3, [r2, #88]	@ 0x58
+ 8101056:	e005      	b.n	8101064 <DMA_CalcBaseAndBitshift+0x10c>
+    }
+  }
+  else /* BDMA instance(s) */
+  {
+    /* return pointer to ISR and IFCR */
+    hdma->StreamBaseAddress = ((uint32_t)((uint32_t*)hdma->Instance) & (uint32_t)(~0xFFU));
+ 8101058:	687b      	ldr	r3, [r7, #4]
+ 810105a:	681b      	ldr	r3, [r3, #0]
+ 810105c:	f023 02ff 	bic.w	r2, r3, #255	@ 0xff
+ 8101060:	687b      	ldr	r3, [r7, #4]
+ 8101062:	659a      	str	r2, [r3, #88]	@ 0x58
+  }
+
+  return hdma->StreamBaseAddress;
+ 8101064:	687b      	ldr	r3, [r7, #4]
+ 8101066:	6d9b      	ldr	r3, [r3, #88]	@ 0x58
+}
+ 8101068:	4618      	mov	r0, r3
+ 810106a:	3714      	adds	r7, #20
+ 810106c:	46bd      	mov	sp, r7
+ 810106e:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8101072:	4770      	bx	lr
+ 8101074:	40020010 	.word	0x40020010
+ 8101078:	40020028 	.word	0x40020028
+ 810107c:	40020040 	.word	0x40020040
+ 8101080:	40020058 	.word	0x40020058
+ 8101084:	40020070 	.word	0x40020070
+ 8101088:	40020088 	.word	0x40020088
+ 810108c:	400200a0 	.word	0x400200a0
+ 8101090:	400200b8 	.word	0x400200b8
+ 8101094:	40020410 	.word	0x40020410
+ 8101098:	40020428 	.word	0x40020428
+ 810109c:	40020440 	.word	0x40020440
+ 81010a0:	40020458 	.word	0x40020458
+ 81010a4:	40020470 	.word	0x40020470
+ 81010a8:	40020488 	.word	0x40020488
+ 81010ac:	400204a0 	.word	0x400204a0
+ 81010b0:	400204b8 	.word	0x400204b8
+ 81010b4:	aaaaaaab 	.word	0xaaaaaaab
+ 81010b8:	08101868 	.word	0x08101868
+
+081010bc <DMA_CheckFifoParam>:
+  * @param  hdma:       pointer to a DMA_HandleTypeDef structure that contains
+  *                     the configuration information for the specified DMA Stream.
+  * @retval HAL status
+  */
+static HAL_StatusTypeDef DMA_CheckFifoParam(const DMA_HandleTypeDef *hdma)
+{
+ 81010bc:	b480      	push	{r7}
+ 81010be:	b085      	sub	sp, #20
+ 81010c0:	af00      	add	r7, sp, #0
+ 81010c2:	6078      	str	r0, [r7, #4]
+  HAL_StatusTypeDef status = HAL_OK;
+ 81010c4:	2300      	movs	r3, #0
+ 81010c6:	73fb      	strb	r3, [r7, #15]
+
+  /* Memory Data size equal to Byte */
+  if (hdma->Init.MemDataAlignment == DMA_MDATAALIGN_BYTE)
+ 81010c8:	687b      	ldr	r3, [r7, #4]
+ 81010ca:	699b      	ldr	r3, [r3, #24]
+ 81010cc:	2b00      	cmp	r3, #0
+ 81010ce:	d120      	bne.n	8101112 <DMA_CheckFifoParam+0x56>
+  {
+    switch (hdma->Init.FIFOThreshold)
+ 81010d0:	687b      	ldr	r3, [r7, #4]
+ 81010d2:	6a9b      	ldr	r3, [r3, #40]	@ 0x28
+ 81010d4:	2b03      	cmp	r3, #3
+ 81010d6:	d858      	bhi.n	810118a <DMA_CheckFifoParam+0xce>
+ 81010d8:	a201      	add	r2, pc, #4	@ (adr r2, 81010e0 <DMA_CheckFifoParam+0x24>)
+ 81010da:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 81010de:	bf00      	nop
+ 81010e0:	081010f1 	.word	0x081010f1
+ 81010e4:	08101103 	.word	0x08101103
+ 81010e8:	081010f1 	.word	0x081010f1
+ 81010ec:	0810118b 	.word	0x0810118b
+    {
+      case DMA_FIFO_THRESHOLD_1QUARTERFULL:
+      case DMA_FIFO_THRESHOLD_3QUARTERSFULL:
+
+        if ((hdma->Init.MemBurst & DMA_SxCR_MBURST_1) == DMA_SxCR_MBURST_1)
+ 81010f0:	687b      	ldr	r3, [r7, #4]
+ 81010f2:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
+ 81010f4:	f003 7380 	and.w	r3, r3, #16777216	@ 0x1000000
+ 81010f8:	2b00      	cmp	r3, #0
+ 81010fa:	d048      	beq.n	810118e <DMA_CheckFifoParam+0xd2>
+        {
+          status = HAL_ERROR;
+ 81010fc:	2301      	movs	r3, #1
+ 81010fe:	73fb      	strb	r3, [r7, #15]
+        }
+        break;
+ 8101100:	e045      	b.n	810118e <DMA_CheckFifoParam+0xd2>
+
+      case DMA_FIFO_THRESHOLD_HALFFULL:
+        if (hdma->Init.MemBurst == DMA_MBURST_INC16)
+ 8101102:	687b      	ldr	r3, [r7, #4]
+ 8101104:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
+ 8101106:	f1b3 7fc0 	cmp.w	r3, #25165824	@ 0x1800000
+ 810110a:	d142      	bne.n	8101192 <DMA_CheckFifoParam+0xd6>
+        {
+          status = HAL_ERROR;
+ 810110c:	2301      	movs	r3, #1
+ 810110e:	73fb      	strb	r3, [r7, #15]
+        }
+        break;
+ 8101110:	e03f      	b.n	8101192 <DMA_CheckFifoParam+0xd6>
+        break;
+    }
+  }
+
+  /* Memory Data size equal to Half-Word */
+  else if (hdma->Init.MemDataAlignment == DMA_MDATAALIGN_HALFWORD)
+ 8101112:	687b      	ldr	r3, [r7, #4]
+ 8101114:	699b      	ldr	r3, [r3, #24]
+ 8101116:	f5b3 5f00 	cmp.w	r3, #8192	@ 0x2000
+ 810111a:	d123      	bne.n	8101164 <DMA_CheckFifoParam+0xa8>
+  {
+    switch (hdma->Init.FIFOThreshold)
+ 810111c:	687b      	ldr	r3, [r7, #4]
+ 810111e:	6a9b      	ldr	r3, [r3, #40]	@ 0x28
+ 8101120:	2b03      	cmp	r3, #3
+ 8101122:	d838      	bhi.n	8101196 <DMA_CheckFifoParam+0xda>
+ 8101124:	a201      	add	r2, pc, #4	@ (adr r2, 810112c <DMA_CheckFifoParam+0x70>)
+ 8101126:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 810112a:	bf00      	nop
+ 810112c:	0810113d 	.word	0x0810113d
+ 8101130:	08101143 	.word	0x08101143
+ 8101134:	0810113d 	.word	0x0810113d
+ 8101138:	08101155 	.word	0x08101155
+    {
+      case DMA_FIFO_THRESHOLD_1QUARTERFULL:
+      case DMA_FIFO_THRESHOLD_3QUARTERSFULL:
+        status = HAL_ERROR;
+ 810113c:	2301      	movs	r3, #1
+ 810113e:	73fb      	strb	r3, [r7, #15]
+        break;
+ 8101140:	e030      	b.n	81011a4 <DMA_CheckFifoParam+0xe8>
+
+      case DMA_FIFO_THRESHOLD_HALFFULL:
+        if ((hdma->Init.MemBurst & DMA_SxCR_MBURST_1) == DMA_SxCR_MBURST_1)
+ 8101142:	687b      	ldr	r3, [r7, #4]
+ 8101144:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
+ 8101146:	f003 7380 	and.w	r3, r3, #16777216	@ 0x1000000
+ 810114a:	2b00      	cmp	r3, #0
+ 810114c:	d025      	beq.n	810119a <DMA_CheckFifoParam+0xde>
+        {
+          status = HAL_ERROR;
+ 810114e:	2301      	movs	r3, #1
+ 8101150:	73fb      	strb	r3, [r7, #15]
+        }
+        break;
+ 8101152:	e022      	b.n	810119a <DMA_CheckFifoParam+0xde>
+
+      case DMA_FIFO_THRESHOLD_FULL:
+        if (hdma->Init.MemBurst == DMA_MBURST_INC16)
+ 8101154:	687b      	ldr	r3, [r7, #4]
+ 8101156:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
+ 8101158:	f1b3 7fc0 	cmp.w	r3, #25165824	@ 0x1800000
+ 810115c:	d11f      	bne.n	810119e <DMA_CheckFifoParam+0xe2>
+        {
+          status = HAL_ERROR;
+ 810115e:	2301      	movs	r3, #1
+ 8101160:	73fb      	strb	r3, [r7, #15]
+        }
+        break;
+ 8101162:	e01c      	b.n	810119e <DMA_CheckFifoParam+0xe2>
+  }
+
+  /* Memory Data size equal to Word */
+  else
+  {
+    switch (hdma->Init.FIFOThreshold)
+ 8101164:	687b      	ldr	r3, [r7, #4]
+ 8101166:	6a9b      	ldr	r3, [r3, #40]	@ 0x28
+ 8101168:	2b02      	cmp	r3, #2
+ 810116a:	d902      	bls.n	8101172 <DMA_CheckFifoParam+0xb6>
+ 810116c:	2b03      	cmp	r3, #3
+ 810116e:	d003      	beq.n	8101178 <DMA_CheckFifoParam+0xbc>
+          status = HAL_ERROR;
+        }
+    break;
+
+      default:
+        break;
+ 8101170:	e018      	b.n	81011a4 <DMA_CheckFifoParam+0xe8>
+        status = HAL_ERROR;
+ 8101172:	2301      	movs	r3, #1
+ 8101174:	73fb      	strb	r3, [r7, #15]
+        break;
+ 8101176:	e015      	b.n	81011a4 <DMA_CheckFifoParam+0xe8>
+        if ((hdma->Init.MemBurst & DMA_SxCR_MBURST_1) == DMA_SxCR_MBURST_1)
+ 8101178:	687b      	ldr	r3, [r7, #4]
+ 810117a:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
+ 810117c:	f003 7380 	and.w	r3, r3, #16777216	@ 0x1000000
+ 8101180:	2b00      	cmp	r3, #0
+ 8101182:	d00e      	beq.n	81011a2 <DMA_CheckFifoParam+0xe6>
+          status = HAL_ERROR;
+ 8101184:	2301      	movs	r3, #1
+ 8101186:	73fb      	strb	r3, [r7, #15]
+    break;
+ 8101188:	e00b      	b.n	81011a2 <DMA_CheckFifoParam+0xe6>
+        break;
+ 810118a:	bf00      	nop
+ 810118c:	e00a      	b.n	81011a4 <DMA_CheckFifoParam+0xe8>
+        break;
+ 810118e:	bf00      	nop
+ 8101190:	e008      	b.n	81011a4 <DMA_CheckFifoParam+0xe8>
+        break;
+ 8101192:	bf00      	nop
+ 8101194:	e006      	b.n	81011a4 <DMA_CheckFifoParam+0xe8>
+        break;
+ 8101196:	bf00      	nop
+ 8101198:	e004      	b.n	81011a4 <DMA_CheckFifoParam+0xe8>
+        break;
+ 810119a:	bf00      	nop
+ 810119c:	e002      	b.n	81011a4 <DMA_CheckFifoParam+0xe8>
+        break;
+ 810119e:	bf00      	nop
+ 81011a0:	e000      	b.n	81011a4 <DMA_CheckFifoParam+0xe8>
+    break;
+ 81011a2:	bf00      	nop
+    }
+  }
+
+  return status;
+ 81011a4:	7bfb      	ldrb	r3, [r7, #15]
+}
+ 81011a6:	4618      	mov	r0, r3
+ 81011a8:	3714      	adds	r7, #20
+ 81011aa:	46bd      	mov	sp, r7
+ 81011ac:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 81011b0:	4770      	bx	lr
+ 81011b2:	bf00      	nop
+
+081011b4 <DMA_CalcDMAMUXChannelBaseAndMask>:
+  * @param  hdma:       pointer to a DMA_HandleTypeDef structure that contains
+  *                     the configuration information for the specified DMA Stream.
+  * @retval HAL status
+  */
+static void DMA_CalcDMAMUXChannelBaseAndMask(DMA_HandleTypeDef *hdma)
+{
+ 81011b4:	b480      	push	{r7}
+ 81011b6:	b085      	sub	sp, #20
+ 81011b8:	af00      	add	r7, sp, #0
+ 81011ba:	6078      	str	r0, [r7, #4]
+  uint32_t stream_number;
+  uint32_t stream_baseaddress = (uint32_t)((uint32_t*)hdma->Instance);
+ 81011bc:	687b      	ldr	r3, [r7, #4]
+ 81011be:	681b      	ldr	r3, [r3, #0]
+ 81011c0:	60bb      	str	r3, [r7, #8]
+
+  if(IS_BDMA_CHANNEL_DMAMUX_INSTANCE(hdma->Instance) != 0U)
+ 81011c2:	687b      	ldr	r3, [r7, #4]
+ 81011c4:	681b      	ldr	r3, [r3, #0]
+ 81011c6:	4a3a      	ldr	r2, [pc, #232]	@ (81012b0 <DMA_CalcDMAMUXChannelBaseAndMask+0xfc>)
+ 81011c8:	4293      	cmp	r3, r2
+ 81011ca:	d022      	beq.n	8101212 <DMA_CalcDMAMUXChannelBaseAndMask+0x5e>
+ 81011cc:	687b      	ldr	r3, [r7, #4]
+ 81011ce:	681b      	ldr	r3, [r3, #0]
+ 81011d0:	4a38      	ldr	r2, [pc, #224]	@ (81012b4 <DMA_CalcDMAMUXChannelBaseAndMask+0x100>)
+ 81011d2:	4293      	cmp	r3, r2
+ 81011d4:	d01d      	beq.n	8101212 <DMA_CalcDMAMUXChannelBaseAndMask+0x5e>
+ 81011d6:	687b      	ldr	r3, [r7, #4]
+ 81011d8:	681b      	ldr	r3, [r3, #0]
+ 81011da:	4a37      	ldr	r2, [pc, #220]	@ (81012b8 <DMA_CalcDMAMUXChannelBaseAndMask+0x104>)
+ 81011dc:	4293      	cmp	r3, r2
+ 81011de:	d018      	beq.n	8101212 <DMA_CalcDMAMUXChannelBaseAndMask+0x5e>
+ 81011e0:	687b      	ldr	r3, [r7, #4]
+ 81011e2:	681b      	ldr	r3, [r3, #0]
+ 81011e4:	4a35      	ldr	r2, [pc, #212]	@ (81012bc <DMA_CalcDMAMUXChannelBaseAndMask+0x108>)
+ 81011e6:	4293      	cmp	r3, r2
+ 81011e8:	d013      	beq.n	8101212 <DMA_CalcDMAMUXChannelBaseAndMask+0x5e>
+ 81011ea:	687b      	ldr	r3, [r7, #4]
+ 81011ec:	681b      	ldr	r3, [r3, #0]
+ 81011ee:	4a34      	ldr	r2, [pc, #208]	@ (81012c0 <DMA_CalcDMAMUXChannelBaseAndMask+0x10c>)
+ 81011f0:	4293      	cmp	r3, r2
+ 81011f2:	d00e      	beq.n	8101212 <DMA_CalcDMAMUXChannelBaseAndMask+0x5e>
+ 81011f4:	687b      	ldr	r3, [r7, #4]
+ 81011f6:	681b      	ldr	r3, [r3, #0]
+ 81011f8:	4a32      	ldr	r2, [pc, #200]	@ (81012c4 <DMA_CalcDMAMUXChannelBaseAndMask+0x110>)
+ 81011fa:	4293      	cmp	r3, r2
+ 81011fc:	d009      	beq.n	8101212 <DMA_CalcDMAMUXChannelBaseAndMask+0x5e>
+ 81011fe:	687b      	ldr	r3, [r7, #4]
+ 8101200:	681b      	ldr	r3, [r3, #0]
+ 8101202:	4a31      	ldr	r2, [pc, #196]	@ (81012c8 <DMA_CalcDMAMUXChannelBaseAndMask+0x114>)
+ 8101204:	4293      	cmp	r3, r2
+ 8101206:	d004      	beq.n	8101212 <DMA_CalcDMAMUXChannelBaseAndMask+0x5e>
+ 8101208:	687b      	ldr	r3, [r7, #4]
+ 810120a:	681b      	ldr	r3, [r3, #0]
+ 810120c:	4a2f      	ldr	r2, [pc, #188]	@ (81012cc <DMA_CalcDMAMUXChannelBaseAndMask+0x118>)
+ 810120e:	4293      	cmp	r3, r2
+ 8101210:	d101      	bne.n	8101216 <DMA_CalcDMAMUXChannelBaseAndMask+0x62>
+ 8101212:	2301      	movs	r3, #1
+ 8101214:	e000      	b.n	8101218 <DMA_CalcDMAMUXChannelBaseAndMask+0x64>
+ 8101216:	2300      	movs	r3, #0
+ 8101218:	2b00      	cmp	r3, #0
+ 810121a:	d01c      	beq.n	8101256 <DMA_CalcDMAMUXChannelBaseAndMask+0xa2>
+  {
+    /* BDMA Channels are connected to DMAMUX2 channels */
+    stream_number = (((uint32_t)((uint32_t*)hdma->Instance) & 0xFFU) - 8U) / 20U;
+ 810121c:	687b      	ldr	r3, [r7, #4]
+ 810121e:	681b      	ldr	r3, [r3, #0]
+ 8101220:	b2db      	uxtb	r3, r3
+ 8101222:	3b08      	subs	r3, #8
+ 8101224:	4a2a      	ldr	r2, [pc, #168]	@ (81012d0 <DMA_CalcDMAMUXChannelBaseAndMask+0x11c>)
+ 8101226:	fba2 2303 	umull	r2, r3, r2, r3
+ 810122a:	091b      	lsrs	r3, r3, #4
+ 810122c:	60fb      	str	r3, [r7, #12]
+    hdma->DMAmuxChannel = (DMAMUX_Channel_TypeDef *)((uint32_t)(((uint32_t)DMAMUX2_Channel0) + (stream_number * 4U)));
+ 810122e:	68fb      	ldr	r3, [r7, #12]
+ 8101230:	f103 53b0 	add.w	r3, r3, #369098752	@ 0x16000000
+ 8101234:	f503 4316 	add.w	r3, r3, #38400	@ 0x9600
+ 8101238:	009b      	lsls	r3, r3, #2
+ 810123a:	461a      	mov	r2, r3
+ 810123c:	687b      	ldr	r3, [r7, #4]
+ 810123e:	661a      	str	r2, [r3, #96]	@ 0x60
+    hdma->DMAmuxChannelStatus = DMAMUX2_ChannelStatus;
+ 8101240:	687b      	ldr	r3, [r7, #4]
+ 8101242:	4a24      	ldr	r2, [pc, #144]	@ (81012d4 <DMA_CalcDMAMUXChannelBaseAndMask+0x120>)
+ 8101244:	665a      	str	r2, [r3, #100]	@ 0x64
+    hdma->DMAmuxChannelStatusMask = 1UL << (stream_number & 0x1FU);
+ 8101246:	68fb      	ldr	r3, [r7, #12]
+ 8101248:	f003 031f 	and.w	r3, r3, #31
+ 810124c:	2201      	movs	r2, #1
+ 810124e:	409a      	lsls	r2, r3
+ 8101250:	687b      	ldr	r3, [r7, #4]
+ 8101252:	669a      	str	r2, [r3, #104]	@ 0x68
+    }
+    hdma->DMAmuxChannel = (DMAMUX_Channel_TypeDef *)((uint32_t)(((uint32_t)DMAMUX1_Channel0) + (stream_number * 4U)));
+    hdma->DMAmuxChannelStatus = DMAMUX1_ChannelStatus;
+    hdma->DMAmuxChannelStatusMask = 1UL << (stream_number & 0x1FU);
+  }
+}
+ 8101254:	e026      	b.n	81012a4 <DMA_CalcDMAMUXChannelBaseAndMask+0xf0>
+    stream_number = (((uint32_t)((uint32_t*)hdma->Instance) & 0xFFU) - 16U) / 24U;
+ 8101256:	687b      	ldr	r3, [r7, #4]
+ 8101258:	681b      	ldr	r3, [r3, #0]
+ 810125a:	b2db      	uxtb	r3, r3
+ 810125c:	3b10      	subs	r3, #16
+ 810125e:	4a1e      	ldr	r2, [pc, #120]	@ (81012d8 <DMA_CalcDMAMUXChannelBaseAndMask+0x124>)
+ 8101260:	fba2 2303 	umull	r2, r3, r2, r3
+ 8101264:	091b      	lsrs	r3, r3, #4
+ 8101266:	60fb      	str	r3, [r7, #12]
+    if((stream_baseaddress <= ((uint32_t)DMA2_Stream7) ) && \
+ 8101268:	68bb      	ldr	r3, [r7, #8]
+ 810126a:	4a1c      	ldr	r2, [pc, #112]	@ (81012dc <DMA_CalcDMAMUXChannelBaseAndMask+0x128>)
+ 810126c:	4293      	cmp	r3, r2
+ 810126e:	d806      	bhi.n	810127e <DMA_CalcDMAMUXChannelBaseAndMask+0xca>
+ 8101270:	68bb      	ldr	r3, [r7, #8]
+ 8101272:	4a1b      	ldr	r2, [pc, #108]	@ (81012e0 <DMA_CalcDMAMUXChannelBaseAndMask+0x12c>)
+ 8101274:	4293      	cmp	r3, r2
+ 8101276:	d902      	bls.n	810127e <DMA_CalcDMAMUXChannelBaseAndMask+0xca>
+      stream_number += 8U;
+ 8101278:	68fb      	ldr	r3, [r7, #12]
+ 810127a:	3308      	adds	r3, #8
+ 810127c:	60fb      	str	r3, [r7, #12]
+    hdma->DMAmuxChannel = (DMAMUX_Channel_TypeDef *)((uint32_t)(((uint32_t)DMAMUX1_Channel0) + (stream_number * 4U)));
+ 810127e:	68fb      	ldr	r3, [r7, #12]
+ 8101280:	f103 5380 	add.w	r3, r3, #268435456	@ 0x10000000
+ 8101284:	f503 4302 	add.w	r3, r3, #33280	@ 0x8200
+ 8101288:	009b      	lsls	r3, r3, #2
+ 810128a:	461a      	mov	r2, r3
+ 810128c:	687b      	ldr	r3, [r7, #4]
+ 810128e:	661a      	str	r2, [r3, #96]	@ 0x60
+    hdma->DMAmuxChannelStatus = DMAMUX1_ChannelStatus;
+ 8101290:	687b      	ldr	r3, [r7, #4]
+ 8101292:	4a14      	ldr	r2, [pc, #80]	@ (81012e4 <DMA_CalcDMAMUXChannelBaseAndMask+0x130>)
+ 8101294:	665a      	str	r2, [r3, #100]	@ 0x64
+    hdma->DMAmuxChannelStatusMask = 1UL << (stream_number & 0x1FU);
+ 8101296:	68fb      	ldr	r3, [r7, #12]
+ 8101298:	f003 031f 	and.w	r3, r3, #31
+ 810129c:	2201      	movs	r2, #1
+ 810129e:	409a      	lsls	r2, r3
+ 81012a0:	687b      	ldr	r3, [r7, #4]
+ 81012a2:	669a      	str	r2, [r3, #104]	@ 0x68
+}
+ 81012a4:	bf00      	nop
+ 81012a6:	3714      	adds	r7, #20
+ 81012a8:	46bd      	mov	sp, r7
+ 81012aa:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 81012ae:	4770      	bx	lr
+ 81012b0:	58025408 	.word	0x58025408
+ 81012b4:	5802541c 	.word	0x5802541c
+ 81012b8:	58025430 	.word	0x58025430
+ 81012bc:	58025444 	.word	0x58025444
+ 81012c0:	58025458 	.word	0x58025458
+ 81012c4:	5802546c 	.word	0x5802546c
+ 81012c8:	58025480 	.word	0x58025480
+ 81012cc:	58025494 	.word	0x58025494
+ 81012d0:	cccccccd 	.word	0xcccccccd
+ 81012d4:	58025880 	.word	0x58025880
+ 81012d8:	aaaaaaab 	.word	0xaaaaaaab
+ 81012dc:	400204b8 	.word	0x400204b8
+ 81012e0:	4002040f 	.word	0x4002040f
+ 81012e4:	40020880 	.word	0x40020880
+
+081012e8 <DMA_CalcDMAMUXRequestGenBaseAndMask>:
+  * @param  hdma:       pointer to a DMA_HandleTypeDef structure that contains
+  *                     the configuration information for the specified DMA Stream.
+  * @retval HAL status
+  */
+static void DMA_CalcDMAMUXRequestGenBaseAndMask(DMA_HandleTypeDef *hdma)
+{
+ 81012e8:	b480      	push	{r7}
+ 81012ea:	b085      	sub	sp, #20
+ 81012ec:	af00      	add	r7, sp, #0
+ 81012ee:	6078      	str	r0, [r7, #4]
+  uint32_t request =  hdma->Init.Request & DMAMUX_CxCR_DMAREQ_ID;
+ 81012f0:	687b      	ldr	r3, [r7, #4]
+ 81012f2:	685b      	ldr	r3, [r3, #4]
+ 81012f4:	b2db      	uxtb	r3, r3
+ 81012f6:	60fb      	str	r3, [r7, #12]
+
+  if((request >= DMA_REQUEST_GENERATOR0) && (request <= DMA_REQUEST_GENERATOR7))
+ 81012f8:	68fb      	ldr	r3, [r7, #12]
+ 81012fa:	2b00      	cmp	r3, #0
+ 81012fc:	d04a      	beq.n	8101394 <DMA_CalcDMAMUXRequestGenBaseAndMask+0xac>
+ 81012fe:	68fb      	ldr	r3, [r7, #12]
+ 8101300:	2b08      	cmp	r3, #8
+ 8101302:	d847      	bhi.n	8101394 <DMA_CalcDMAMUXRequestGenBaseAndMask+0xac>
+  {
+    if(IS_BDMA_CHANNEL_DMAMUX_INSTANCE(hdma->Instance) != 0U)
+ 8101304:	687b      	ldr	r3, [r7, #4]
+ 8101306:	681b      	ldr	r3, [r3, #0]
+ 8101308:	4a25      	ldr	r2, [pc, #148]	@ (81013a0 <DMA_CalcDMAMUXRequestGenBaseAndMask+0xb8>)
+ 810130a:	4293      	cmp	r3, r2
+ 810130c:	d022      	beq.n	8101354 <DMA_CalcDMAMUXRequestGenBaseAndMask+0x6c>
+ 810130e:	687b      	ldr	r3, [r7, #4]
+ 8101310:	681b      	ldr	r3, [r3, #0]
+ 8101312:	4a24      	ldr	r2, [pc, #144]	@ (81013a4 <DMA_CalcDMAMUXRequestGenBaseAndMask+0xbc>)
+ 8101314:	4293      	cmp	r3, r2
+ 8101316:	d01d      	beq.n	8101354 <DMA_CalcDMAMUXRequestGenBaseAndMask+0x6c>
+ 8101318:	687b      	ldr	r3, [r7, #4]
+ 810131a:	681b      	ldr	r3, [r3, #0]
+ 810131c:	4a22      	ldr	r2, [pc, #136]	@ (81013a8 <DMA_CalcDMAMUXRequestGenBaseAndMask+0xc0>)
+ 810131e:	4293      	cmp	r3, r2
+ 8101320:	d018      	beq.n	8101354 <DMA_CalcDMAMUXRequestGenBaseAndMask+0x6c>
+ 8101322:	687b      	ldr	r3, [r7, #4]
+ 8101324:	681b      	ldr	r3, [r3, #0]
+ 8101326:	4a21      	ldr	r2, [pc, #132]	@ (81013ac <DMA_CalcDMAMUXRequestGenBaseAndMask+0xc4>)
+ 8101328:	4293      	cmp	r3, r2
+ 810132a:	d013      	beq.n	8101354 <DMA_CalcDMAMUXRequestGenBaseAndMask+0x6c>
+ 810132c:	687b      	ldr	r3, [r7, #4]
+ 810132e:	681b      	ldr	r3, [r3, #0]
+ 8101330:	4a1f      	ldr	r2, [pc, #124]	@ (81013b0 <DMA_CalcDMAMUXRequestGenBaseAndMask+0xc8>)
+ 8101332:	4293      	cmp	r3, r2
+ 8101334:	d00e      	beq.n	8101354 <DMA_CalcDMAMUXRequestGenBaseAndMask+0x6c>
+ 8101336:	687b      	ldr	r3, [r7, #4]
+ 8101338:	681b      	ldr	r3, [r3, #0]
+ 810133a:	4a1e      	ldr	r2, [pc, #120]	@ (81013b4 <DMA_CalcDMAMUXRequestGenBaseAndMask+0xcc>)
+ 810133c:	4293      	cmp	r3, r2
+ 810133e:	d009      	beq.n	8101354 <DMA_CalcDMAMUXRequestGenBaseAndMask+0x6c>
+ 8101340:	687b      	ldr	r3, [r7, #4]
+ 8101342:	681b      	ldr	r3, [r3, #0]
+ 8101344:	4a1c      	ldr	r2, [pc, #112]	@ (81013b8 <DMA_CalcDMAMUXRequestGenBaseAndMask+0xd0>)
+ 8101346:	4293      	cmp	r3, r2
+ 8101348:	d004      	beq.n	8101354 <DMA_CalcDMAMUXRequestGenBaseAndMask+0x6c>
+ 810134a:	687b      	ldr	r3, [r7, #4]
+ 810134c:	681b      	ldr	r3, [r3, #0]
+ 810134e:	4a1b      	ldr	r2, [pc, #108]	@ (81013bc <DMA_CalcDMAMUXRequestGenBaseAndMask+0xd4>)
+ 8101350:	4293      	cmp	r3, r2
+ 8101352:	d101      	bne.n	8101358 <DMA_CalcDMAMUXRequestGenBaseAndMask+0x70>
+ 8101354:	2301      	movs	r3, #1
+ 8101356:	e000      	b.n	810135a <DMA_CalcDMAMUXRequestGenBaseAndMask+0x72>
+ 8101358:	2300      	movs	r3, #0
+ 810135a:	2b00      	cmp	r3, #0
+ 810135c:	d00a      	beq.n	8101374 <DMA_CalcDMAMUXRequestGenBaseAndMask+0x8c>
+    {
+      /* BDMA Channels are connected to DMAMUX2 request generator blocks */
+      hdma->DMAmuxRequestGen = (DMAMUX_RequestGen_TypeDef *)((uint32_t)(((uint32_t)DMAMUX2_RequestGenerator0) + ((request - 1U) * 4U)));
+ 810135e:	68fa      	ldr	r2, [r7, #12]
+ 8101360:	4b17      	ldr	r3, [pc, #92]	@ (81013c0 <DMA_CalcDMAMUXRequestGenBaseAndMask+0xd8>)
+ 8101362:	4413      	add	r3, r2
+ 8101364:	009b      	lsls	r3, r3, #2
+ 8101366:	461a      	mov	r2, r3
+ 8101368:	687b      	ldr	r3, [r7, #4]
+ 810136a:	66da      	str	r2, [r3, #108]	@ 0x6c
+
+      hdma->DMAmuxRequestGenStatus = DMAMUX2_RequestGenStatus;
+ 810136c:	687b      	ldr	r3, [r7, #4]
+ 810136e:	4a15      	ldr	r2, [pc, #84]	@ (81013c4 <DMA_CalcDMAMUXRequestGenBaseAndMask+0xdc>)
+ 8101370:	671a      	str	r2, [r3, #112]	@ 0x70
+ 8101372:	e009      	b.n	8101388 <DMA_CalcDMAMUXRequestGenBaseAndMask+0xa0>
+    }
+    else
+    {
+      /* DMA1 and DMA2 Streams use DMAMUX1 request generator blocks */
+      hdma->DMAmuxRequestGen = (DMAMUX_RequestGen_TypeDef *)((uint32_t)(((uint32_t)DMAMUX1_RequestGenerator0) + ((request - 1U) * 4U)));
+ 8101374:	68fa      	ldr	r2, [r7, #12]
+ 8101376:	4b14      	ldr	r3, [pc, #80]	@ (81013c8 <DMA_CalcDMAMUXRequestGenBaseAndMask+0xe0>)
+ 8101378:	4413      	add	r3, r2
+ 810137a:	009b      	lsls	r3, r3, #2
+ 810137c:	461a      	mov	r2, r3
+ 810137e:	687b      	ldr	r3, [r7, #4]
+ 8101380:	66da      	str	r2, [r3, #108]	@ 0x6c
+
+      hdma->DMAmuxRequestGenStatus = DMAMUX1_RequestGenStatus;
+ 8101382:	687b      	ldr	r3, [r7, #4]
+ 8101384:	4a11      	ldr	r2, [pc, #68]	@ (81013cc <DMA_CalcDMAMUXRequestGenBaseAndMask+0xe4>)
+ 8101386:	671a      	str	r2, [r3, #112]	@ 0x70
+    }
+
+    hdma->DMAmuxRequestGenStatusMask = 1UL << (request - 1U);
+ 8101388:	68fb      	ldr	r3, [r7, #12]
+ 810138a:	3b01      	subs	r3, #1
+ 810138c:	2201      	movs	r2, #1
+ 810138e:	409a      	lsls	r2, r3
+ 8101390:	687b      	ldr	r3, [r7, #4]
+ 8101392:	675a      	str	r2, [r3, #116]	@ 0x74
+  }
+}
+ 8101394:	bf00      	nop
+ 8101396:	3714      	adds	r7, #20
+ 8101398:	46bd      	mov	sp, r7
+ 810139a:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 810139e:	4770      	bx	lr
+ 81013a0:	58025408 	.word	0x58025408
+ 81013a4:	5802541c 	.word	0x5802541c
+ 81013a8:	58025430 	.word	0x58025430
+ 81013ac:	58025444 	.word	0x58025444
+ 81013b0:	58025458 	.word	0x58025458
+ 81013b4:	5802546c 	.word	0x5802546c
+ 81013b8:	58025480 	.word	0x58025480
+ 81013bc:	58025494 	.word	0x58025494
+ 81013c0:	1600963f 	.word	0x1600963f
+ 81013c4:	58025940 	.word	0x58025940
+ 81013c8:	1000823f 	.word	0x1000823f
+ 81013cc:	40020940 	.word	0x40020940
+
+081013d0 <HAL_HSEM_ActivateNotification>:
+  * @brief  Activate Semaphore release Notification for a given Semaphores Mask .
+  * @param  SemMask: Mask of Released semaphores
+  * @retval Semaphore Key
+  */
+void HAL_HSEM_ActivateNotification(uint32_t SemMask)
+{
+ 81013d0:	b480      	push	{r7}
+ 81013d2:	b083      	sub	sp, #12
+ 81013d4:	af00      	add	r7, sp, #0
+ 81013d6:	6078      	str	r0, [r7, #4]
+  {
+    /*Use interrupt line 1 for CPU2 Master*/
+    HSEM->C2IER |= SemMask;
+  }
+#else
+  HSEM_COMMON->IER |= SemMask;
+ 81013d8:	4b05      	ldr	r3, [pc, #20]	@ (81013f0 <HAL_HSEM_ActivateNotification+0x20>)
+ 81013da:	681a      	ldr	r2, [r3, #0]
+ 81013dc:	4904      	ldr	r1, [pc, #16]	@ (81013f0 <HAL_HSEM_ActivateNotification+0x20>)
+ 81013de:	687b      	ldr	r3, [r7, #4]
+ 81013e0:	4313      	orrs	r3, r2
+ 81013e2:	600b      	str	r3, [r1, #0]
+#endif
+}
+ 81013e4:	bf00      	nop
+ 81013e6:	370c      	adds	r7, #12
+ 81013e8:	46bd      	mov	sp, r7
+ 81013ea:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 81013ee:	4770      	bx	lr
+ 81013f0:	58026510 	.word	0x58026510
+
+081013f4 <HAL_PWREx_EnterSTOPMode>:
+  *            @arg PWR_D2_DOMAIN : Enter D2 Domain to DSTOP mode.
+  *            @arg PWR_D3_DOMAIN : Enter D3/SRD Domain to DSTOP mode.
+  * @retval None.
+  */
+void HAL_PWREx_EnterSTOPMode (uint32_t Regulator, uint8_t STOPEntry, uint32_t Domain)
+{
+ 81013f4:	b580      	push	{r7, lr}
+ 81013f6:	b084      	sub	sp, #16
+ 81013f8:	af00      	add	r7, sp, #0
+ 81013fa:	60f8      	str	r0, [r7, #12]
+ 81013fc:	460b      	mov	r3, r1
+ 81013fe:	607a      	str	r2, [r7, #4]
+ 8101400:	72fb      	strb	r3, [r7, #11]
+  assert_param (IS_PWR_REGULATOR (Regulator));
+  assert_param (IS_PWR_STOP_ENTRY (STOPEntry));
+  assert_param (IS_PWR_DOMAIN (Domain));
+
+  /* Select the regulator state in Stop mode */
+  MODIFY_REG (PWR->CR1, PWR_CR1_LPDS, Regulator);
+ 8101402:	4b37      	ldr	r3, [pc, #220]	@ (81014e0 <HAL_PWREx_EnterSTOPMode+0xec>)
+ 8101404:	681b      	ldr	r3, [r3, #0]
+ 8101406:	f023 0201 	bic.w	r2, r3, #1
+ 810140a:	4935      	ldr	r1, [pc, #212]	@ (81014e0 <HAL_PWREx_EnterSTOPMode+0xec>)
+ 810140c:	68fb      	ldr	r3, [r7, #12]
+ 810140e:	4313      	orrs	r3, r2
+ 8101410:	600b      	str	r3, [r1, #0]
+
+  /* Select the domain Power Down DeepSleep */
+  if (Domain == PWR_D1_DOMAIN)
+ 8101412:	687b      	ldr	r3, [r7, #4]
+ 8101414:	2b00      	cmp	r3, #0
+ 8101416:	d123      	bne.n	8101460 <HAL_PWREx_EnterSTOPMode+0x6c>
+  {
+#if defined (DUAL_CORE)
+    /* Check current core */
+    if (HAL_GetCurrentCPUID () != CM7_CPUID)
+ 8101418:	f7ff fa32 	bl	8100880 <HAL_GetCurrentCPUID>
+ 810141c:	4603      	mov	r3, r0
+ 810141e:	2b03      	cmp	r3, #3
+ 8101420:	d158      	bne.n	81014d4 <HAL_PWREx_EnterSTOPMode+0xe0>
+      return;
+    }
+#endif /* defined (DUAL_CORE) */
+
+    /* Keep DSTOP mode when D1/CD domain enters Deepsleep */
+    CLEAR_BIT (PWR->CPUCR, PWR_CPUCR_PDDS_D1);
+ 8101422:	4b2f      	ldr	r3, [pc, #188]	@ (81014e0 <HAL_PWREx_EnterSTOPMode+0xec>)
+ 8101424:	691b      	ldr	r3, [r3, #16]
+ 8101426:	4a2e      	ldr	r2, [pc, #184]	@ (81014e0 <HAL_PWREx_EnterSTOPMode+0xec>)
+ 8101428:	f023 0301 	bic.w	r3, r3, #1
+ 810142c:	6113      	str	r3, [r2, #16]
+
+    /* Set SLEEPDEEP bit of Cortex System Control Register */
+    SET_BIT (SCB->SCR, SCB_SCR_SLEEPDEEP_Msk);
+ 810142e:	4b2d      	ldr	r3, [pc, #180]	@ (81014e4 <HAL_PWREx_EnterSTOPMode+0xf0>)
+ 8101430:	691b      	ldr	r3, [r3, #16]
+ 8101432:	4a2c      	ldr	r2, [pc, #176]	@ (81014e4 <HAL_PWREx_EnterSTOPMode+0xf0>)
+ 8101434:	f043 0304 	orr.w	r3, r3, #4
+ 8101438:	6113      	str	r3, [r2, #16]
+  \details Acts as a special kind of Data Memory Barrier.
+           It completes when all explicit memory accesses before this instruction complete.
+ */
+__STATIC_FORCEINLINE void __DSB(void)
+{
+  __ASM volatile ("dsb 0xF":::"memory");
+ 810143a:	f3bf 8f4f 	dsb	sy
+}
+ 810143e:	bf00      	nop
+  __ASM volatile ("isb 0xF":::"memory");
+ 8101440:	f3bf 8f6f 	isb	sy
+}
+ 8101444:	bf00      	nop
+    /* Ensure that all instructions are done before entering STOP mode */
+    __DSB ();
+    __ISB ();
+
+    /* Select Stop mode entry */
+    if (STOPEntry == PWR_STOPENTRY_WFI)
+ 8101446:	7afb      	ldrb	r3, [r7, #11]
+ 8101448:	2b01      	cmp	r3, #1
+ 810144a:	d101      	bne.n	8101450 <HAL_PWREx_EnterSTOPMode+0x5c>
+    {
+      /* Request Wait For Interrupt */
+      __WFI ();
+ 810144c:	bf30      	wfi
+ 810144e:	e000      	b.n	8101452 <HAL_PWREx_EnterSTOPMode+0x5e>
+    }
+    else
+    {
+      /* Request Wait For Event */
+      __WFE ();
+ 8101450:	bf20      	wfe
+    }
+
+    /* Clear SLEEPDEEP bit of Cortex-Mx in the System Control Register */
+    CLEAR_BIT (SCB->SCR, SCB_SCR_SLEEPDEEP_Msk);
+ 8101452:	4b24      	ldr	r3, [pc, #144]	@ (81014e4 <HAL_PWREx_EnterSTOPMode+0xf0>)
+ 8101454:	691b      	ldr	r3, [r3, #16]
+ 8101456:	4a23      	ldr	r2, [pc, #140]	@ (81014e4 <HAL_PWREx_EnterSTOPMode+0xf0>)
+ 8101458:	f023 0304 	bic.w	r3, r3, #4
+ 810145c:	6113      	str	r3, [r2, #16]
+ 810145e:	e03c      	b.n	81014da <HAL_PWREx_EnterSTOPMode+0xe6>
+  }
+#if defined (PWR_CPUCR_PDDS_D2)
+  else if (Domain == PWR_D2_DOMAIN)
+ 8101460:	687b      	ldr	r3, [r7, #4]
+ 8101462:	2b01      	cmp	r3, #1
+ 8101464:	d123      	bne.n	81014ae <HAL_PWREx_EnterSTOPMode+0xba>
+  {
+#if defined (DUAL_CORE)
+    /* Check current core */
+    if (HAL_GetCurrentCPUID () != CM4_CPUID)
+ 8101466:	f7ff fa0b 	bl	8100880 <HAL_GetCurrentCPUID>
+ 810146a:	4603      	mov	r3, r0
+ 810146c:	2b01      	cmp	r3, #1
+ 810146e:	d133      	bne.n	81014d8 <HAL_PWREx_EnterSTOPMode+0xe4>
+      */
+      return;
+    }
+
+    /* Keep DSTOP mode when D2 domain enters Deepsleep */
+    CLEAR_BIT (PWR->CPU2CR, PWR_CPU2CR_PDDS_D2);
+ 8101470:	4b1b      	ldr	r3, [pc, #108]	@ (81014e0 <HAL_PWREx_EnterSTOPMode+0xec>)
+ 8101472:	695b      	ldr	r3, [r3, #20]
+ 8101474:	4a1a      	ldr	r2, [pc, #104]	@ (81014e0 <HAL_PWREx_EnterSTOPMode+0xec>)
+ 8101476:	f023 0302 	bic.w	r3, r3, #2
+ 810147a:	6153      	str	r3, [r2, #20]
+
+    /* Set SLEEPDEEP bit of Cortex System Control Register */
+    SET_BIT (SCB->SCR, SCB_SCR_SLEEPDEEP_Msk);
+ 810147c:	4b19      	ldr	r3, [pc, #100]	@ (81014e4 <HAL_PWREx_EnterSTOPMode+0xf0>)
+ 810147e:	691b      	ldr	r3, [r3, #16]
+ 8101480:	4a18      	ldr	r2, [pc, #96]	@ (81014e4 <HAL_PWREx_EnterSTOPMode+0xf0>)
+ 8101482:	f043 0304 	orr.w	r3, r3, #4
+ 8101486:	6113      	str	r3, [r2, #16]
+  __ASM volatile ("dsb 0xF":::"memory");
+ 8101488:	f3bf 8f4f 	dsb	sy
+}
+ 810148c:	bf00      	nop
+  __ASM volatile ("isb 0xF":::"memory");
+ 810148e:	f3bf 8f6f 	isb	sy
+}
+ 8101492:	bf00      	nop
+    /* Ensure that all instructions are done before entering STOP mode */
+    __DSB ();
+    __ISB ();
+
+    /* Select Stop mode entry */
+    if (STOPEntry == PWR_STOPENTRY_WFI)
+ 8101494:	7afb      	ldrb	r3, [r7, #11]
+ 8101496:	2b01      	cmp	r3, #1
+ 8101498:	d101      	bne.n	810149e <HAL_PWREx_EnterSTOPMode+0xaa>
+    {
+      /* Request Wait For Interrupt */
+      __WFI ();
+ 810149a:	bf30      	wfi
+ 810149c:	e000      	b.n	81014a0 <HAL_PWREx_EnterSTOPMode+0xac>
+    }
+    else
+    {
+      /* Request Wait For Event */
+      __WFE ();
+ 810149e:	bf20      	wfe
+    }
+
+    /* Clear SLEEPDEEP bit of Cortex-Mx in the System Control Register */
+    CLEAR_BIT (SCB->SCR, SCB_SCR_SLEEPDEEP_Msk);
+ 81014a0:	4b10      	ldr	r3, [pc, #64]	@ (81014e4 <HAL_PWREx_EnterSTOPMode+0xf0>)
+ 81014a2:	691b      	ldr	r3, [r3, #16]
+ 81014a4:	4a0f      	ldr	r2, [pc, #60]	@ (81014e4 <HAL_PWREx_EnterSTOPMode+0xf0>)
+ 81014a6:	f023 0304 	bic.w	r3, r3, #4
+ 81014aa:	6113      	str	r3, [r2, #16]
+ 81014ac:	e015      	b.n	81014da <HAL_PWREx_EnterSTOPMode+0xe6>
+#endif /* defined (PWR_CPUCR_PDDS_D2) */
+  else
+  {
+#if defined (DUAL_CORE)
+    /* Check current core */
+    if (HAL_GetCurrentCPUID () == CM7_CPUID)
+ 81014ae:	f7ff f9e7 	bl	8100880 <HAL_GetCurrentCPUID>
+ 81014b2:	4603      	mov	r3, r0
+ 81014b4:	2b03      	cmp	r3, #3
+ 81014b6:	d106      	bne.n	81014c6 <HAL_PWREx_EnterSTOPMode+0xd2>
+    {
+      /* Keep DSTOP mode when D3 domain enters Deepsleep */
+      CLEAR_BIT (PWR->CPUCR, PWR_CPUCR_PDDS_D3);
+ 81014b8:	4b09      	ldr	r3, [pc, #36]	@ (81014e0 <HAL_PWREx_EnterSTOPMode+0xec>)
+ 81014ba:	691b      	ldr	r3, [r3, #16]
+ 81014bc:	4a08      	ldr	r2, [pc, #32]	@ (81014e0 <HAL_PWREx_EnterSTOPMode+0xec>)
+ 81014be:	f023 0304 	bic.w	r3, r3, #4
+ 81014c2:	6113      	str	r3, [r2, #16]
+ 81014c4:	e009      	b.n	81014da <HAL_PWREx_EnterSTOPMode+0xe6>
+    }
+    else
+    {
+      /* Keep DSTOP mode when D3 domain enters Deepsleep */
+      CLEAR_BIT (PWR->CPU2CR, PWR_CPU2CR_PDDS_D3);
+ 81014c6:	4b06      	ldr	r3, [pc, #24]	@ (81014e0 <HAL_PWREx_EnterSTOPMode+0xec>)
+ 81014c8:	695b      	ldr	r3, [r3, #20]
+ 81014ca:	4a05      	ldr	r2, [pc, #20]	@ (81014e0 <HAL_PWREx_EnterSTOPMode+0xec>)
+ 81014cc:	f023 0304 	bic.w	r3, r3, #4
+ 81014d0:	6153      	str	r3, [r2, #20]
+ 81014d2:	e002      	b.n	81014da <HAL_PWREx_EnterSTOPMode+0xe6>
+      return;
+ 81014d4:	bf00      	nop
+ 81014d6:	e000      	b.n	81014da <HAL_PWREx_EnterSTOPMode+0xe6>
+      return;
+ 81014d8:	bf00      	nop
+#else
+    /* Keep DSTOP mode when D3/SRD domain enters Deepsleep */
+    CLEAR_BIT (PWR->CPUCR, PWR_CPUCR_PDDS_D3);
+#endif  /* defined (DUAL_CORE) */
+  }
+}
+ 81014da:	3710      	adds	r7, #16
+ 81014dc:	46bd      	mov	sp, r7
+ 81014de:	bd80      	pop	{r7, pc}
+ 81014e0:	58024800 	.word	0x58024800
+ 81014e4:	e000ed00 	.word	0xe000ed00
+
+081014e8 <HAL_PWREx_ClearPendingEvent>:
+  *         enter low power mode using Wait For Event request.
+  * @note   Cortex-M7 must be in CRUN mode when calling this API by Cortex-M4.
+  * @retval None.
+  */
+void HAL_PWREx_ClearPendingEvent (void)
+{
+ 81014e8:	b580      	push	{r7, lr}
+ 81014ea:	af00      	add	r7, sp, #0
+#if defined (DUAL_CORE)
+  /* Check the current Core */
+  if (HAL_GetCurrentCPUID () == CM7_CPUID)
+ 81014ec:	f7ff f9c8 	bl	8100880 <HAL_GetCurrentCPUID>
+ 81014f0:	4603      	mov	r3, r0
+ 81014f2:	2b03      	cmp	r3, #3
+ 81014f4:	d101      	bne.n	81014fa <HAL_PWREx_ClearPendingEvent+0x12>
+  {
+    __WFE ();
+ 81014f6:	bf20      	wfe
+    __WFE ();
+  }
+#else
+  __WFE ();
+#endif /* defined (DUAL_CORE) */
+}
+ 81014f8:	e001      	b.n	81014fe <HAL_PWREx_ClearPendingEvent+0x16>
+    __SEV ();
+ 81014fa:	bf40      	sev
+    __WFE ();
+ 81014fc:	bf20      	wfe
+}
+ 81014fe:	bf00      	nop
+ 8101500:	bd80      	pop	{r7, pc}
+	...
+
+08101504 <HAL_RCC_GetSysClockFreq>:
+  *
+  *
+  * @retval SYSCLK frequency
+  */
+uint32_t HAL_RCC_GetSysClockFreq(void)
+{
+ 8101504:	b480      	push	{r7}
+ 8101506:	b089      	sub	sp, #36	@ 0x24
+ 8101508:	af00      	add	r7, sp, #0
+  float_t fracn1, pllvco;
+  uint32_t sysclockfreq;
+
+  /* Get SYSCLK source -------------------------------------------------------*/
+
+  switch (RCC->CFGR & RCC_CFGR_SWS)
+ 810150a:	4bb3      	ldr	r3, [pc, #716]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 810150c:	691b      	ldr	r3, [r3, #16]
+ 810150e:	f003 0338 	and.w	r3, r3, #56	@ 0x38
+ 8101512:	2b18      	cmp	r3, #24
+ 8101514:	f200 8155 	bhi.w	81017c2 <HAL_RCC_GetSysClockFreq+0x2be>
+ 8101518:	a201      	add	r2, pc, #4	@ (adr r2, 8101520 <HAL_RCC_GetSysClockFreq+0x1c>)
+ 810151a:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 810151e:	bf00      	nop
+ 8101520:	08101585 	.word	0x08101585
+ 8101524:	081017c3 	.word	0x081017c3
+ 8101528:	081017c3 	.word	0x081017c3
+ 810152c:	081017c3 	.word	0x081017c3
+ 8101530:	081017c3 	.word	0x081017c3
+ 8101534:	081017c3 	.word	0x081017c3
+ 8101538:	081017c3 	.word	0x081017c3
+ 810153c:	081017c3 	.word	0x081017c3
+ 8101540:	081015ab 	.word	0x081015ab
+ 8101544:	081017c3 	.word	0x081017c3
+ 8101548:	081017c3 	.word	0x081017c3
+ 810154c:	081017c3 	.word	0x081017c3
+ 8101550:	081017c3 	.word	0x081017c3
+ 8101554:	081017c3 	.word	0x081017c3
+ 8101558:	081017c3 	.word	0x081017c3
+ 810155c:	081017c3 	.word	0x081017c3
+ 8101560:	081015b1 	.word	0x081015b1
+ 8101564:	081017c3 	.word	0x081017c3
+ 8101568:	081017c3 	.word	0x081017c3
+ 810156c:	081017c3 	.word	0x081017c3
+ 8101570:	081017c3 	.word	0x081017c3
+ 8101574:	081017c3 	.word	0x081017c3
+ 8101578:	081017c3 	.word	0x081017c3
+ 810157c:	081017c3 	.word	0x081017c3
+ 8101580:	081015b7 	.word	0x081015b7
+  {
+    case RCC_CFGR_SWS_HSI:  /* HSI used as system clock source */
+
+      if (__HAL_RCC_GET_FLAG(RCC_FLAG_HSIDIV) != 0U)
+ 8101584:	4b94      	ldr	r3, [pc, #592]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 8101586:	681b      	ldr	r3, [r3, #0]
+ 8101588:	f003 0320 	and.w	r3, r3, #32
+ 810158c:	2b00      	cmp	r3, #0
+ 810158e:	d009      	beq.n	81015a4 <HAL_RCC_GetSysClockFreq+0xa0>
+      {
+        sysclockfreq = (uint32_t)(HSI_VALUE >> (__HAL_RCC_GET_HSI_DIVIDER() >> 3));
+ 8101590:	4b91      	ldr	r3, [pc, #580]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 8101592:	681b      	ldr	r3, [r3, #0]
+ 8101594:	08db      	lsrs	r3, r3, #3
+ 8101596:	f003 0303 	and.w	r3, r3, #3
+ 810159a:	4a90      	ldr	r2, [pc, #576]	@ (81017dc <HAL_RCC_GetSysClockFreq+0x2d8>)
+ 810159c:	fa22 f303 	lsr.w	r3, r2, r3
+ 81015a0:	61bb      	str	r3, [r7, #24]
+      else
+      {
+        sysclockfreq = (uint32_t) HSI_VALUE;
+      }
+
+      break;
+ 81015a2:	e111      	b.n	81017c8 <HAL_RCC_GetSysClockFreq+0x2c4>
+        sysclockfreq = (uint32_t) HSI_VALUE;
+ 81015a4:	4b8d      	ldr	r3, [pc, #564]	@ (81017dc <HAL_RCC_GetSysClockFreq+0x2d8>)
+ 81015a6:	61bb      	str	r3, [r7, #24]
+      break;
+ 81015a8:	e10e      	b.n	81017c8 <HAL_RCC_GetSysClockFreq+0x2c4>
+
+    case RCC_CFGR_SWS_CSI:  /* CSI used as system clock  source */
+      sysclockfreq = CSI_VALUE;
+ 81015aa:	4b8d      	ldr	r3, [pc, #564]	@ (81017e0 <HAL_RCC_GetSysClockFreq+0x2dc>)
+ 81015ac:	61bb      	str	r3, [r7, #24]
+      break;
+ 81015ae:	e10b      	b.n	81017c8 <HAL_RCC_GetSysClockFreq+0x2c4>
+
+    case RCC_CFGR_SWS_HSE:  /* HSE used as system clock  source */
+      sysclockfreq = HSE_VALUE;
+ 81015b0:	4b8c      	ldr	r3, [pc, #560]	@ (81017e4 <HAL_RCC_GetSysClockFreq+0x2e0>)
+ 81015b2:	61bb      	str	r3, [r7, #24]
+      break;
+ 81015b4:	e108      	b.n	81017c8 <HAL_RCC_GetSysClockFreq+0x2c4>
+    case RCC_CFGR_SWS_PLL1:  /* PLL1 used as system clock  source */
+
+      /* PLL_VCO = (HSE_VALUE or HSI_VALUE or CSI_VALUE/ PLLM) * PLLN
+      SYSCLK = PLL_VCO / PLLR
+      */
+      pllsource = (RCC->PLLCKSELR & RCC_PLLCKSELR_PLLSRC);
+ 81015b6:	4b88      	ldr	r3, [pc, #544]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 81015b8:	6a9b      	ldr	r3, [r3, #40]	@ 0x28
+ 81015ba:	f003 0303 	and.w	r3, r3, #3
+ 81015be:	617b      	str	r3, [r7, #20]
+      pllm = ((RCC->PLLCKSELR & RCC_PLLCKSELR_DIVM1) >> 4)  ;
+ 81015c0:	4b85      	ldr	r3, [pc, #532]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 81015c2:	6a9b      	ldr	r3, [r3, #40]	@ 0x28
+ 81015c4:	091b      	lsrs	r3, r3, #4
+ 81015c6:	f003 033f 	and.w	r3, r3, #63	@ 0x3f
+ 81015ca:	613b      	str	r3, [r7, #16]
+      pllfracen = ((RCC-> PLLCFGR & RCC_PLLCFGR_PLL1FRACEN) >> RCC_PLLCFGR_PLL1FRACEN_Pos);
+ 81015cc:	4b82      	ldr	r3, [pc, #520]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 81015ce:	6adb      	ldr	r3, [r3, #44]	@ 0x2c
+ 81015d0:	f003 0301 	and.w	r3, r3, #1
+ 81015d4:	60fb      	str	r3, [r7, #12]
+      fracn1 = (float_t)(uint32_t)(pllfracen * ((RCC->PLL1FRACR & RCC_PLL1FRACR_FRACN1) >> 3));
+ 81015d6:	4b80      	ldr	r3, [pc, #512]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 81015d8:	6b5b      	ldr	r3, [r3, #52]	@ 0x34
+ 81015da:	08db      	lsrs	r3, r3, #3
+ 81015dc:	f3c3 030c 	ubfx	r3, r3, #0, #13
+ 81015e0:	68fa      	ldr	r2, [r7, #12]
+ 81015e2:	fb02 f303 	mul.w	r3, r2, r3
+ 81015e6:	ee07 3a90 	vmov	s15, r3
+ 81015ea:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 81015ee:	edc7 7a02 	vstr	s15, [r7, #8]
+
+      if (pllm != 0U)
+ 81015f2:	693b      	ldr	r3, [r7, #16]
+ 81015f4:	2b00      	cmp	r3, #0
+ 81015f6:	f000 80e1 	beq.w	81017bc <HAL_RCC_GetSysClockFreq+0x2b8>
+      {
+        switch (pllsource)
+ 81015fa:	697b      	ldr	r3, [r7, #20]
+ 81015fc:	2b02      	cmp	r3, #2
+ 81015fe:	f000 8083 	beq.w	8101708 <HAL_RCC_GetSysClockFreq+0x204>
+ 8101602:	697b      	ldr	r3, [r7, #20]
+ 8101604:	2b02      	cmp	r3, #2
+ 8101606:	f200 80a1 	bhi.w	810174c <HAL_RCC_GetSysClockFreq+0x248>
+ 810160a:	697b      	ldr	r3, [r7, #20]
+ 810160c:	2b00      	cmp	r3, #0
+ 810160e:	d003      	beq.n	8101618 <HAL_RCC_GetSysClockFreq+0x114>
+ 8101610:	697b      	ldr	r3, [r7, #20]
+ 8101612:	2b01      	cmp	r3, #1
+ 8101614:	d056      	beq.n	81016c4 <HAL_RCC_GetSysClockFreq+0x1c0>
+ 8101616:	e099      	b.n	810174c <HAL_RCC_GetSysClockFreq+0x248>
+        {
+          case RCC_PLLSOURCE_HSI:  /* HSI used as PLL clock source */
+
+            if (__HAL_RCC_GET_FLAG(RCC_FLAG_HSIDIV) != 0U)
+ 8101618:	4b6f      	ldr	r3, [pc, #444]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 810161a:	681b      	ldr	r3, [r3, #0]
+ 810161c:	f003 0320 	and.w	r3, r3, #32
+ 8101620:	2b00      	cmp	r3, #0
+ 8101622:	d02d      	beq.n	8101680 <HAL_RCC_GetSysClockFreq+0x17c>
+            {
+              hsivalue = (HSI_VALUE >> (__HAL_RCC_GET_HSI_DIVIDER() >> 3));
+ 8101624:	4b6c      	ldr	r3, [pc, #432]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 8101626:	681b      	ldr	r3, [r3, #0]
+ 8101628:	08db      	lsrs	r3, r3, #3
+ 810162a:	f003 0303 	and.w	r3, r3, #3
+ 810162e:	4a6b      	ldr	r2, [pc, #428]	@ (81017dc <HAL_RCC_GetSysClockFreq+0x2d8>)
+ 8101630:	fa22 f303 	lsr.w	r3, r2, r3
+ 8101634:	607b      	str	r3, [r7, #4]
+              pllvco = ((float_t)hsivalue / (float_t)pllm) * ((float_t)(uint32_t)(RCC->PLL1DIVR & RCC_PLL1DIVR_N1) + (fracn1 / (float_t)0x2000) + (float_t)1);
+ 8101636:	687b      	ldr	r3, [r7, #4]
+ 8101638:	ee07 3a90 	vmov	s15, r3
+ 810163c:	eef8 6a67 	vcvt.f32.u32	s13, s15
+ 8101640:	693b      	ldr	r3, [r7, #16]
+ 8101642:	ee07 3a90 	vmov	s15, r3
+ 8101646:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 810164a:	ee86 7aa7 	vdiv.f32	s14, s13, s15
+ 810164e:	4b62      	ldr	r3, [pc, #392]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 8101650:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8101652:	f3c3 0308 	ubfx	r3, r3, #0, #9
+ 8101656:	ee07 3a90 	vmov	s15, r3
+ 810165a:	eef8 6a67 	vcvt.f32.u32	s13, s15
+ 810165e:	ed97 6a02 	vldr	s12, [r7, #8]
+ 8101662:	eddf 5a61 	vldr	s11, [pc, #388]	@ 81017e8 <HAL_RCC_GetSysClockFreq+0x2e4>
+ 8101666:	eec6 7a25 	vdiv.f32	s15, s12, s11
+ 810166a:	ee76 7aa7 	vadd.f32	s15, s13, s15
+ 810166e:	eef7 6a00 	vmov.f32	s13, #112	@ 0x3f800000  1.0
+ 8101672:	ee77 7aa6 	vadd.f32	s15, s15, s13
+ 8101676:	ee67 7a27 	vmul.f32	s15, s14, s15
+ 810167a:	edc7 7a07 	vstr	s15, [r7, #28]
+            }
+            else
+            {
+              pllvco = ((float_t)HSI_VALUE / (float_t)pllm) * ((float_t)(uint32_t)(RCC->PLL1DIVR & RCC_PLL1DIVR_N1) + (fracn1 / (float_t)0x2000) + (float_t)1);
+            }
+            break;
+ 810167e:	e087      	b.n	8101790 <HAL_RCC_GetSysClockFreq+0x28c>
+              pllvco = ((float_t)HSI_VALUE / (float_t)pllm) * ((float_t)(uint32_t)(RCC->PLL1DIVR & RCC_PLL1DIVR_N1) + (fracn1 / (float_t)0x2000) + (float_t)1);
+ 8101680:	693b      	ldr	r3, [r7, #16]
+ 8101682:	ee07 3a90 	vmov	s15, r3
+ 8101686:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 810168a:	eddf 6a58 	vldr	s13, [pc, #352]	@ 81017ec <HAL_RCC_GetSysClockFreq+0x2e8>
+ 810168e:	ee86 7aa7 	vdiv.f32	s14, s13, s15
+ 8101692:	4b51      	ldr	r3, [pc, #324]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 8101694:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8101696:	f3c3 0308 	ubfx	r3, r3, #0, #9
+ 810169a:	ee07 3a90 	vmov	s15, r3
+ 810169e:	eef8 6a67 	vcvt.f32.u32	s13, s15
+ 81016a2:	ed97 6a02 	vldr	s12, [r7, #8]
+ 81016a6:	eddf 5a50 	vldr	s11, [pc, #320]	@ 81017e8 <HAL_RCC_GetSysClockFreq+0x2e4>
+ 81016aa:	eec6 7a25 	vdiv.f32	s15, s12, s11
+ 81016ae:	ee76 7aa7 	vadd.f32	s15, s13, s15
+ 81016b2:	eef7 6a00 	vmov.f32	s13, #112	@ 0x3f800000  1.0
+ 81016b6:	ee77 7aa6 	vadd.f32	s15, s15, s13
+ 81016ba:	ee67 7a27 	vmul.f32	s15, s14, s15
+ 81016be:	edc7 7a07 	vstr	s15, [r7, #28]
+            break;
+ 81016c2:	e065      	b.n	8101790 <HAL_RCC_GetSysClockFreq+0x28c>
+
+          case RCC_PLLSOURCE_CSI:  /* CSI used as PLL clock source */
+            pllvco = ((float_t)CSI_VALUE / (float_t)pllm) * ((float_t)(uint32_t)(RCC->PLL1DIVR & RCC_PLL1DIVR_N1) + (fracn1 / (float_t)0x2000) + (float_t)1);
+ 81016c4:	693b      	ldr	r3, [r7, #16]
+ 81016c6:	ee07 3a90 	vmov	s15, r3
+ 81016ca:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 81016ce:	eddf 6a48 	vldr	s13, [pc, #288]	@ 81017f0 <HAL_RCC_GetSysClockFreq+0x2ec>
+ 81016d2:	ee86 7aa7 	vdiv.f32	s14, s13, s15
+ 81016d6:	4b40      	ldr	r3, [pc, #256]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 81016d8:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 81016da:	f3c3 0308 	ubfx	r3, r3, #0, #9
+ 81016de:	ee07 3a90 	vmov	s15, r3
+ 81016e2:	eef8 6a67 	vcvt.f32.u32	s13, s15
+ 81016e6:	ed97 6a02 	vldr	s12, [r7, #8]
+ 81016ea:	eddf 5a3f 	vldr	s11, [pc, #252]	@ 81017e8 <HAL_RCC_GetSysClockFreq+0x2e4>
+ 81016ee:	eec6 7a25 	vdiv.f32	s15, s12, s11
+ 81016f2:	ee76 7aa7 	vadd.f32	s15, s13, s15
+ 81016f6:	eef7 6a00 	vmov.f32	s13, #112	@ 0x3f800000  1.0
+ 81016fa:	ee77 7aa6 	vadd.f32	s15, s15, s13
+ 81016fe:	ee67 7a27 	vmul.f32	s15, s14, s15
+ 8101702:	edc7 7a07 	vstr	s15, [r7, #28]
+            break;
+ 8101706:	e043      	b.n	8101790 <HAL_RCC_GetSysClockFreq+0x28c>
+
+          case RCC_PLLSOURCE_HSE:  /* HSE used as PLL clock source */
+            pllvco = ((float_t)HSE_VALUE / (float_t)pllm) * ((float_t)(uint32_t)(RCC->PLL1DIVR & RCC_PLL1DIVR_N1) + (fracn1 / (float_t)0x2000) + (float_t)1);
+ 8101708:	693b      	ldr	r3, [r7, #16]
+ 810170a:	ee07 3a90 	vmov	s15, r3
+ 810170e:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 8101712:	eddf 6a38 	vldr	s13, [pc, #224]	@ 81017f4 <HAL_RCC_GetSysClockFreq+0x2f0>
+ 8101716:	ee86 7aa7 	vdiv.f32	s14, s13, s15
+ 810171a:	4b2f      	ldr	r3, [pc, #188]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 810171c:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 810171e:	f3c3 0308 	ubfx	r3, r3, #0, #9
+ 8101722:	ee07 3a90 	vmov	s15, r3
+ 8101726:	eef8 6a67 	vcvt.f32.u32	s13, s15
+ 810172a:	ed97 6a02 	vldr	s12, [r7, #8]
+ 810172e:	eddf 5a2e 	vldr	s11, [pc, #184]	@ 81017e8 <HAL_RCC_GetSysClockFreq+0x2e4>
+ 8101732:	eec6 7a25 	vdiv.f32	s15, s12, s11
+ 8101736:	ee76 7aa7 	vadd.f32	s15, s13, s15
+ 810173a:	eef7 6a00 	vmov.f32	s13, #112	@ 0x3f800000  1.0
+ 810173e:	ee77 7aa6 	vadd.f32	s15, s15, s13
+ 8101742:	ee67 7a27 	vmul.f32	s15, s14, s15
+ 8101746:	edc7 7a07 	vstr	s15, [r7, #28]
+            break;
+ 810174a:	e021      	b.n	8101790 <HAL_RCC_GetSysClockFreq+0x28c>
+
+          default:
+            pllvco = ((float_t)CSI_VALUE / (float_t)pllm) * ((float_t)(uint32_t)(RCC->PLL1DIVR & RCC_PLL1DIVR_N1) + (fracn1 / (float_t)0x2000) + (float_t)1);
+ 810174c:	693b      	ldr	r3, [r7, #16]
+ 810174e:	ee07 3a90 	vmov	s15, r3
+ 8101752:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 8101756:	eddf 6a26 	vldr	s13, [pc, #152]	@ 81017f0 <HAL_RCC_GetSysClockFreq+0x2ec>
+ 810175a:	ee86 7aa7 	vdiv.f32	s14, s13, s15
+ 810175e:	4b1e      	ldr	r3, [pc, #120]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 8101760:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8101762:	f3c3 0308 	ubfx	r3, r3, #0, #9
+ 8101766:	ee07 3a90 	vmov	s15, r3
+ 810176a:	eef8 6a67 	vcvt.f32.u32	s13, s15
+ 810176e:	ed97 6a02 	vldr	s12, [r7, #8]
+ 8101772:	eddf 5a1d 	vldr	s11, [pc, #116]	@ 81017e8 <HAL_RCC_GetSysClockFreq+0x2e4>
+ 8101776:	eec6 7a25 	vdiv.f32	s15, s12, s11
+ 810177a:	ee76 7aa7 	vadd.f32	s15, s13, s15
+ 810177e:	eef7 6a00 	vmov.f32	s13, #112	@ 0x3f800000  1.0
+ 8101782:	ee77 7aa6 	vadd.f32	s15, s15, s13
+ 8101786:	ee67 7a27 	vmul.f32	s15, s14, s15
+ 810178a:	edc7 7a07 	vstr	s15, [r7, #28]
+            break;
+ 810178e:	bf00      	nop
+        }
+        pllp = (((RCC->PLL1DIVR & RCC_PLL1DIVR_P1) >> 9) + 1U) ;
+ 8101790:	4b11      	ldr	r3, [pc, #68]	@ (81017d8 <HAL_RCC_GetSysClockFreq+0x2d4>)
+ 8101792:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8101794:	0a5b      	lsrs	r3, r3, #9
+ 8101796:	f003 037f 	and.w	r3, r3, #127	@ 0x7f
+ 810179a:	3301      	adds	r3, #1
+ 810179c:	603b      	str	r3, [r7, #0]
+        sysclockfreq = (uint32_t)(float_t)(pllvco / (float_t)pllp);
+ 810179e:	683b      	ldr	r3, [r7, #0]
+ 81017a0:	ee07 3a90 	vmov	s15, r3
+ 81017a4:	eeb8 7a67 	vcvt.f32.u32	s14, s15
+ 81017a8:	edd7 6a07 	vldr	s13, [r7, #28]
+ 81017ac:	eec6 7a87 	vdiv.f32	s15, s13, s14
+ 81017b0:	eefc 7ae7 	vcvt.u32.f32	s15, s15
+ 81017b4:	ee17 3a90 	vmov	r3, s15
+ 81017b8:	61bb      	str	r3, [r7, #24]
+      }
+      else
+      {
+        sysclockfreq = 0U;
+      }
+      break;
+ 81017ba:	e005      	b.n	81017c8 <HAL_RCC_GetSysClockFreq+0x2c4>
+        sysclockfreq = 0U;
+ 81017bc:	2300      	movs	r3, #0
+ 81017be:	61bb      	str	r3, [r7, #24]
+      break;
+ 81017c0:	e002      	b.n	81017c8 <HAL_RCC_GetSysClockFreq+0x2c4>
+
+    default:
+      sysclockfreq = CSI_VALUE;
+ 81017c2:	4b07      	ldr	r3, [pc, #28]	@ (81017e0 <HAL_RCC_GetSysClockFreq+0x2dc>)
+ 81017c4:	61bb      	str	r3, [r7, #24]
+      break;
+ 81017c6:	bf00      	nop
+  }
+
+  return sysclockfreq;
+ 81017c8:	69bb      	ldr	r3, [r7, #24]
+}
+ 81017ca:	4618      	mov	r0, r3
+ 81017cc:	3724      	adds	r7, #36	@ 0x24
+ 81017ce:	46bd      	mov	sp, r7
+ 81017d0:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 81017d4:	4770      	bx	lr
+ 81017d6:	bf00      	nop
+ 81017d8:	58024400 	.word	0x58024400
+ 81017dc:	03d09000 	.word	0x03d09000
+ 81017e0:	003d0900 	.word	0x003d0900
+ 81017e4:	017d7840 	.word	0x017d7840
+ 81017e8:	46000000 	.word	0x46000000
+ 81017ec:	4c742400 	.word	0x4c742400
+ 81017f0:	4a742400 	.word	0x4a742400
+ 81017f4:	4bbebc20 	.word	0x4bbebc20
+
+081017f8 <__libc_init_array>:
+ 81017f8:	b570      	push	{r4, r5, r6, lr}
+ 81017fa:	4d0d      	ldr	r5, [pc, #52]	@ (8101830 <__libc_init_array+0x38>)
+ 81017fc:	4c0d      	ldr	r4, [pc, #52]	@ (8101834 <__libc_init_array+0x3c>)
+ 81017fe:	1b64      	subs	r4, r4, r5
+ 8101800:	10a4      	asrs	r4, r4, #2
+ 8101802:	2600      	movs	r6, #0
+ 8101804:	42a6      	cmp	r6, r4
+ 8101806:	d109      	bne.n	810181c <__libc_init_array+0x24>
+ 8101808:	4d0b      	ldr	r5, [pc, #44]	@ (8101838 <__libc_init_array+0x40>)
+ 810180a:	4c0c      	ldr	r4, [pc, #48]	@ (810183c <__libc_init_array+0x44>)
+ 810180c:	f000 f818 	bl	8101840 <_init>
+ 8101810:	1b64      	subs	r4, r4, r5
+ 8101812:	10a4      	asrs	r4, r4, #2
+ 8101814:	2600      	movs	r6, #0
+ 8101816:	42a6      	cmp	r6, r4
+ 8101818:	d105      	bne.n	8101826 <__libc_init_array+0x2e>
+ 810181a:	bd70      	pop	{r4, r5, r6, pc}
+ 810181c:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8101820:	4798      	blx	r3
+ 8101822:	3601      	adds	r6, #1
+ 8101824:	e7ee      	b.n	8101804 <__libc_init_array+0xc>
+ 8101826:	f855 3b04 	ldr.w	r3, [r5], #4
+ 810182a:	4798      	blx	r3
+ 810182c:	3601      	adds	r6, #1
+ 810182e:	e7f2      	b.n	8101816 <__libc_init_array+0x1e>
+ 8101830:	08101870 	.word	0x08101870
+ 8101834:	08101870 	.word	0x08101870
+ 8101838:	08101870 	.word	0x08101870
+ 810183c:	08101874 	.word	0x08101874
+
+08101840 <_init>:
+ 8101840:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8101842:	bf00      	nop
+ 8101844:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8101846:	bc08      	pop	{r3}
+ 8101848:	469e      	mov	lr, r3
+ 810184a:	4770      	bx	lr
+
+0810184c <_fini>:
+ 810184c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 810184e:	bf00      	nop
+ 8101850:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8101852:	bc08      	pop	{r3}
+ 8101854:	469e      	mov	lr, r3
+ 8101856:	4770      	bx	lr

@@ -1,0 +1,6 @@
+../Core/Src/main.c:65:6:test_loop	2
+../Core/Src/main.c:78:5:main	2
+../Core/Src/main.c:170:6:SystemClock_Config	4
+../Core/Src/main.c:220:13:MX_USART3_UART_Init	5
+../Core/Src/main.c:268:13:MX_GPIO_Init	1
+../Core/Src/main.c:290:6:Error_Handler	1
