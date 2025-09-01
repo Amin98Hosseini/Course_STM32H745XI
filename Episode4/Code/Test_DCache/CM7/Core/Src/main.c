@@ -139,7 +139,7 @@ Error_Handler();
       SCB_EnableDCache();
 
       fill_src_buffer();
-
+      SCB_CleanDCache();
       // Problematic case: CPU has written the data but it's still in the cache
       // DMA reads the old data from SRAM
 
