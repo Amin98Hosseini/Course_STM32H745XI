@@ -1,0 +1,112 @@
+1-Add To STM32H745XIHX_FLASH.ld
+/* ITCM code section: load in FLASH, run in ITCM RAM */
+	.itcm_func :
+	{
+	  . = ALIGN(4);
+	  _itcm_func_start = .;
+	  *(.itcm_func)
+	  . = ALIGN(4);
+	  _itcm_func_end = .;
+	} >ITCMRAM AT> FLASH
+	/* symbol pointing to load address in FLASH */
+	_itcm_func_load = LOADADDR(.itcm_func);
+
+2-Add To Main.c
+
+#include <stdio.h>
+
+extern uint32_t _itcm_func_load;
+extern uint32_t _itcm_func_start;
+extern uint32_t _itcm_func_end;
+
+unsigned char str1[50];
+unsigned char str2[50];
+
+/* Prevent inlining/optimizing away */
+void Puts_Serial(char *str)
+{
+	while(*str!=0)
+	{
+	HAL_UART_Transmit(&huart3,(unsigned char *)str,1,10);
+	str++;
+	}
+}
+
+
+__attribute__((noinline))
+void heavy_loop(uint32_t iterations, volatile uint32_t *sink)
+{
+    volatile uint32_t acc = 0;
+    for (uint32_t i = 0; i < iterations; ++i) {
+        acc += (i ^ (i << 1)) + 1;
+    }
+    *sink = acc; /* prevent optimizer removing loop */
+}
+
+/* Place a copy of heavy_loop into ITCM */
+__attribute__((section(".itcm_func")))
+__attribute__((noinline))
+void heavy_loop_itcm(uint32_t iterations, volatile uint32_t *sink)
+{
+    volatile uint32_t acc = 0;
+    for (uint32_t i = 0; i < iterations; ++i) {
+        acc += (i ^ (i << 1)) + 1;
+    }
+    *sink = acc;
+}
+
+/* DWT cycle counter helpers */
+static inline void dwt_init(void) {
+    /* Enable DWT */
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    DWT->CYCCNT = 0;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+}
+static inline uint32_t dwt_get(void) { return DWT->CYCCNT; }
+
+/* copy .itcm_func from flash to ITCM RAM at startup */
+static void copy_itcm_func_to_ram(void)
+{
+    uint32_t *src = (uint32_t*)&_itcm_func_load;
+    uint32_t *dst = (uint32_t*)&_itcm_func_start;
+    uint32_t len = (uint32_t)(&_itcm_func_end) - (uint32_t)(&_itcm_func_start);
+    /* len is bytes; ensure word copy */
+    uint32_t words = len / 4;
+    for (uint32_t i = 0; i < words; i++) dst[i] = src[i];
+    /* if any tail bytes, copy bytewise (usually not needed if aligned) */
+}
+
+
+/* IMPORTANT: copy code to ITCM BEFORE using it */
+      copy_itcm_func_to_ram();
+
+      /* init DWT */
+      dwt_init();
+
+      volatile uint32_t sink1 = 0;
+      volatile uint32_t sink2 = 0;
+      const uint32_t iterations = 5000000U; /* 5M */
+
+      /* Warm-up caches / peripherals if desired */
+      HAL_Delay(100);
+
+      /* ----- Measure heavy_loop in FLASH ----- */
+      DWT->CYCCNT = 0;
+      uint32_t t0 = dwt_get();
+      heavy_loop(iterations, &sink1);
+      uint32_t t1 = dwt_get();
+      uint32_t cycles_flash = t1 - t0;
+
+      /* ----- Measure heavy_loop_itcm (in ITCM) ----- */
+      DWT->CYCCNT = 0;
+      t0 = dwt_get();
+      heavy_loop_itcm(iterations, &sink2);
+      t1 = dwt_get();
+      uint32_t cycles_itcm = t1 - t0;
+
+      /* print results (via UART or SWO) */
+      sprintf(str1,"FLASH cycles: %lu\r\n", (unsigned long)cycles_flash);
+      sprintf(str2,"ITCM  cycles: %lu\r\n", (unsigned long)cycles_itcm);
+
+      Puts_Serial(str1);
+	Puts_Serial(str2);

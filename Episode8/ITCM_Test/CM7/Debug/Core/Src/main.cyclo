@@ -1,0 +1,9 @@
+../Core/Src/main.c:69:6:Puts_Serial	2
+../Core/Src/main.c:80:6:heavy_loop	2
+../Core/Src/main.c:92:6:heavy_loop_itcm	2
+../Core/Src/main.c:102:20:dwt_init	1
+../Core/Src/main.c:108:24:dwt_get	1
+../Core/Src/main.c:111:13:copy_itcm_func_to_ram	2
+../Core/Src/main.c:127:5:main	1
+../Core/Src/main.c:243:6:SystemClock_Config	4
+../Core/Src/main.c:305:6:Error_Handler	1

@@ -1,0 +1,9 @@
+../Core/Src/main.c:69:6:Puts_Serial	16	static
+../Core/Src/main.c:80:6:heavy_loop	24	static
+../Core/Src/main.c:92:6:heavy_loop_itcm	24	static
+../Core/Src/main.c:102:20:dwt_init	4	static
+../Core/Src/main.c:108:24:dwt_get	4	static
+../Core/Src/main.c:111:13:copy_itcm_func_to_ram	32	static
+../Core/Src/main.c:127:5:main	40	static
+../Core/Src/main.c:243:6:SystemClock_Config	120	static
+../Core/Src/main.c:305:6:Error_Handler	4	static,ignoring_inline_asm

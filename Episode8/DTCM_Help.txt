@@ -1,0 +1,98 @@
+1-Add To STM32H745XIHX_FLASH.ld File
+.dtcm_data (NOLOAD) :
+	{
+	  . = ALIGN(4);
+	  _sdtcm = .;
+	  *(.dtcm_data)
+	  . = ALIGN(4);
+	  _edtcm = .;
+	} >DTCMRAM
+
+
+2- Add To Main.c
+#define DATA_SIZE 4096
+
+unsigned char str1[50];
+unsigned char str2[50];
+
+int32_t sram_data[DATA_SIZE];
+
+__attribute__((section(".dtcm_data")))
+int32_t dtcm_data[DATA_SIZE];
+
+
+void Puts_Serial(char *str)
+{
+	while(*str!=0)
+	{
+	HAL_UART_Transmit(&huart3,(unsigned char *)str,1,10);
+	str++;
+	}
+}
+
+void init_buffers(void)
+{
+    for (int i = 0; i < DATA_SIZE; i++)
+    {
+        sram_data[i] = i + 1;
+        dtcm_data[i] = i + 1;
+    }
+}
+
+
+__attribute__((noinline))
+int32_t compute_on_buffer(int32_t *buf, uint32_t len, uint32_t rounds)
+{
+    volatile int32_t acc = 0;
+
+    for (uint32_t r = 0; r < rounds; r++)
+    {
+        for (uint32_t i = 0; i < len; i++)
+        {
+            acc += buf[i] * 3;
+            acc ^= (acc << 1);
+        }
+    }
+    return acc;
+}
+
+
+static inline void dwt_init(void)
+{
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    DWT->CYCCNT = 0;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+}
+
+static inline uint32_t dwt_get(void)
+{
+    return DWT->CYCCNT;
+}
+
+-----Main Func
+volatile int32_t res1, res2;
+  uint32_t t0, t1;
+  uint32_t cycles_sram, cycles_dtcm;
+
+  init_buffers();
+  dwt_init();
+
+  /* ---- SRAM test ---- */
+  DWT->CYCCNT = 0;
+  t0 = dwt_get();
+  res1 = compute_on_buffer(sram_data, DATA_SIZE, 1000);
+  t1 = dwt_get();
+  cycles_sram = t1 - t0;
+
+  /* ---- DTCM test ---- */
+  DWT->CYCCNT = 0;
+  t0 = dwt_get();
+  res2 = compute_on_buffer(dtcm_data, DATA_SIZE, 1000);
+  t1 = dwt_get();
+  cycles_dtcm = t1 - t0;
+
+  sprintf(str1,"SRAM cycles: %lu\r\n", cycles_sram);
+  sprintf(str2,"DTCM cycles: %lu\r\n", cycles_dtcm);
+
+  Puts_Serial(str1);
+  Puts_Serial(str2);
